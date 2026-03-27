@@ -1,11 +1,55 @@
+# === Git ===
 .git/
+.gitignore
+
+# === Python ===
 *.pyc
 *.pyo
 __pycache__/
-.idea
-.vscode
 venv/
 .venv/
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# === Node.js / Next.js ===
+client/node_modules/
+client/.next/
+client/.turbo/
+client/out/
+client/.env*.local
+client/coverage/
+
+# === IDE ===
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# === Logs ===
 *.log
+logs/
+
+# === Django ===
 staticfiles/
+backend/media/
+
+# === Environnement ===
 .envs/*
+.env
+.env.*
+!.env.example
+
+# === Docker ===
+*.tar
+docker-compose*.override.yml
+
+# === OS ===
+.DS_Store
+Thumbs.db
+
+# === Docs (optionnel) ===
+docs/
+*.md
+!README.md

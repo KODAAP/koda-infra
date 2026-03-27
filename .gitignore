@@ -22,7 +22,7 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
-
+.jbeval/
 
 
 deploy_*
