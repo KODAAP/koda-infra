@@ -52,6 +52,19 @@ services:
     networks:
       - reverseProxy_nw
 
+  enketo:
+    image: ghcr.io/enketo/enketo:7.6.1
+    container_name: sycosur_enketo
+    expose:
+       - "8005"
+    volumes:
+       - ./docker/prod/enketo/config.json:/srv/src/enketo/packages/enketo-express/config/config.json
+    depends_on:
+      - redis
+    restart: unless-stopped
+    networks:
+      - reverseProxy_nw
+
   celeryworker:
     <<: *api
     image: sycosur_celeryworker
