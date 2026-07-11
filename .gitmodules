@@ -1,6 +1,6 @@
 [submodule "backend"]
 	path = backend
-	url = https://github.com/Insuco-intl-limited/sycosur-backend.git
+	url = git@github.com:KODAAP/back-office.git
 [submodule "client"]
 	path = client
-	url = https://github.com/Insuco-intl-limited/sycosur-frontend.git
+	url = git@github.com:KODAAP/koda-client.git

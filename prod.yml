@@ -3,8 +3,8 @@ services:
     build:
       context: .
       dockerfile: ./docker/prod/django/Dockerfile
-    image: sycosur_api
-    container_name: sycosur_api
+    image: koda_api
+    container_name: koda_api
     volumes:
       - static_volume:/app/staticfiles
       - media_volume:/app/media
@@ -23,10 +23,10 @@ services:
     build:
       context: .
       dockerfile: ./docker/prod/postgres/Dockerfile
-    image: sycosur_postgres
-    container_name: sycosur_postgres
+    image: koda_postgres
+    container_name: koda_postgres
     volumes:
-      - sycosur_postgres_data:/var/lib/postgresql/data
+      - koda_postgres_data:/var/lib/postgresql/data
     env_file:
       - ./backend/.envs/.env.prod
     networks:
@@ -36,8 +36,8 @@ services:
     build:
       context: .
       dockerfile: ./docker/prod/client/Dockerfile
-    container_name: sycosur_client
-    image: sycosur_client
+    container_name: koda_client
+    image: koda_client
     env_file:
       - "./client/.env.prod"
     networks:
@@ -46,15 +46,15 @@ services:
   redis:
     image: redis:7.0-alpine3.19
     command: redis-server --appendonly yes
-    container_name: sycosur_redis
+    container_name: koda_redis
     volumes:
-      - sycosur_redis_data:/data
+      - koda_redis_data:/data
     networks:
       - reverseProxy_nw
 
   enketo:
     image: ghcr.io/enketo/enketo:7.6.1
-    container_name: sycosur_enketo
+    container_name: koda_enketo
     expose:
        - "8005"
     volumes:
@@ -67,13 +67,13 @@ services:
 
   celeryworker:
     <<: *api
-    image: sycosur_celeryworker
-    container_name: sycosur_celeryworker
+    image: koda_celeryworker
+    container_name: koda_celeryworker
     command: /start-celeryworker
 
 #  celerybeat:
-#    image: sycosur_celerybeat
-#    container_name: sycosur_celerybeat
+#    image: koda_celerybeat
+#    container_name: koda_celerybeat
 #    build:
 #      context: .
 #      dockerfile: ./docker/prod/django/Dockerfile
@@ -90,8 +90,8 @@ services:
 
   flower:
     <<: *api
-    image: sycosur_flower
-    container_name: sycosur_flower
+    image: koda_flower
+    container_name: koda_flower
     ports:
       - "5555:5555"
     command: /start-flower
@@ -104,5 +104,5 @@ networks:
 volumes:
   media_volume:
   static_volume:
-  sycosur_postgres_data:
-  sycosur_redis_data:
+  koda_postgres_data:
+  koda_redis_data:

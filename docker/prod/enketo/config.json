@@ -1,5 +1,5 @@
 {
-  "app name": "Sycosur Enketo Production",
+  "app name": "Koda Enketo Production",
   "base path": "-",
   "query parameter to pass to submission": "st",
   "csrf cookie name": "__csrf",
@@ -46,7 +46,7 @@
     }
   },
   "support": {
-    "email": "support@insuco.com"
+    "email": "support@kodaap.com"
   },
   "widgets": [
     "note",

@@ -1,0 +1,86 @@
+{
+    "app name": "Koda Enketo",
+    "base path": "-",
+    "query parameter to pass to submission": "st",
+    "csrf cookie name": "__csrf",
+    "default theme": "kobo",
+    "encryption key": "873c69518f4042bdf07f1cc6a473ed85588b5bc6455400f35a868eb06de74ef1",
+    "expiry for record cache": 3600000,
+    "frameguard deny": false,
+
+    "ip filtering": {
+        "allowIPAddressList": [],
+        "allowMetaIPAddress": false,
+        "allowPrivateIPAddress": true,
+        "denyAddressList": []
+    },
+    "less secure encryption key": "5cbd008fa14294478b12f642e4e21219220e4644ec012285dd89e8a9d0d2cb94",
+    "linked form and data server": {
+        "api key": "VtM5z6lRbyEEiKGH5PuT0CIjkwqeixiDylGtLnw6cg0nny94xUDZRaleFCN3PBXx",
+        "authentication": {
+            "type": "basic",
+            "allow insecure transport": true
+        },
+        "name": "ODK Central",
+        "server url": "https://test-odk.insuco.net",
+        "legacy formhub": false
+    },
+    "log": {
+        "submissions": true
+    },
+    "max processes": 16,
+    "no sniff": true,
+    "offline enabled": true,
+    "port": "8005",
+    "redis": {
+        "cache": {
+            "db": 1,
+            "host": "redis",
+            "password": null,
+            "port": "6379"
+        },
+        "main": {
+            "db": 0,
+            "host": "redis",
+            "password": null,
+            "port": "6379"
+        }
+    },
+    "support": {
+        "email": "support@kodaap.com"
+    },
+  "widgets": [
+        "note",
+        "select-desktop",
+        "select-mobile",
+        "autocomplete",
+        "geo",
+        "textarea",
+        "url",
+        "table",
+        "radio",
+        "date",
+        "time",
+        "datetime",
+        "select-media",
+        "file",
+        "draw",
+        "rank",
+        "likert",
+        "range",
+        "columns",
+        "image-view",
+        "comment",
+        "image-map",
+        "date-native",
+        "date-native-ios",
+        "date-mobile",
+        "text-max",
+        "text-print",
+        "rating",
+        "thousands-sep",
+        "integer",
+        "decimal"
+    ],
+    "timeout": 30000
+}

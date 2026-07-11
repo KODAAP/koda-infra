@@ -23,6 +23,6 @@ Thumbs.db
 *.swp
 *.swo
 .jbeval/
-docker/local
+client/local
 .junie
 deploy_*

@@ -1,0 +1,67 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 1. Checkout code with submodules
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          submodules: 'recursive'
+
+      - name: 2. Create remote release directory
+        id: create_dir # On donne un ID à cette étape pour réutiliser sa sortie
+        uses: appleboy/ssh-action@029f5b4aeeeb58fdfe1410a5d17f967dacf36262 # v1.0.3
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.REMOTE_PORT }}
+          script: |
+            set -e
+            RELEASE_DIR="/var/www/releases/$(date +%Y%m%d%H%M%S)"
+            mkdir -p $RELEASE_DIR
+            # Cette ligne permet de passer le nom du dossier aux étapes suivantes
+            echo "RELEASE_DIR=$RELEASE_DIR" >> $GITHUB_OUTPUT
+
+      - name: 3. Copy project files to new release directory
+        uses: appleboy/scp-action@917f8b81dfc1ccd331fef9e2d61bdc6c8be94634 # v0.1.7
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.REMOTE_PORT }}
+          source: "./" # Copie tout le contenu du répertoire courant (où le code a été "checkout")
+          target: "${{ steps.create_dir.outputs.RELEASE_DIR }}" # Vers le dossier créé à l'étape 2
+
+      - name: 4. Build, Activate, and Cleanup on server
+        uses: appleboy/ssh-action@029f5b4aeeeb58fdfe1410a5d17f967dacf36262 # v1.0.3
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.REMOTE_PORT }}
+          script: |
+            set -e
+            # On récupère le nom du dossier de la même manière
+            RELEASE_DIR="${{ steps.create_dir.outputs.RELEASE_DIR }}"
+            APP_DIR="/var/www/public_html"
+
+            echo "--> Building and starting Docker containers in $RELEASE_DIR"
+            cd $RELEASE_DIR
+            docker-compose -f prod.yml up -d --build
+
+            echo "--> Activating new release by updating the symlink"
+            ln -snf $RELEASE_DIR $APP_DIR
+
+            echo "--> Cleaning up old releases (keep last 5)"
+            # J'ai ajouté sudo ici car votre script original l'utilisait
+            cd /var/www/releases && ls -t | tail -n +6 | xargs -r sudo rm -rf
+
+            echo "✅ New version is live!"
