@@ -1,9 +1,9 @@
-site_name: Sycosur Documentation
+site_name: Koda Documentation
 site_description: Plateforme de gestion d'enquêtes ODK — Documentation officielle
-site_author: Insuco
+site_author: Ekue
 site_url: https://sycosur.insuco.net/docs
 
-repo_name: Sycosur
+repo_name: Kodaap
 docs_dir: docs
 
 theme:
