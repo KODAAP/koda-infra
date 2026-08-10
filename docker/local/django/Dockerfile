@@ -51,24 +51,16 @@ RUN pip install --no-cache-dir --no-index --find-links=/wheels/ /wheels/* \
 
 # Copy and set up scripts
 COPY --chown=django:django ./docker/local/django/entrypoint.sh /entrypoint
-RUN sed -i 's/\r$//g' /entrypoint
-RUN chmod +x /entrypoint
-
 COPY --chown=django:django ./docker/local/django/start.sh /start
-RUN sed -i 's/\r$//g' /start
-RUN chmod +x /start
-
 COPY --chown=django:django ./docker/local/django/celery/worker/start.sh /start-celeryworker
-RUN sed -i 's/\r$//g' /start-celeryworker
-RUN chmod +x /start-celeryworker
-
 #COPY --chown=django:django ./docker/local/django/celery/beat/start.sh /start-celerybeat
-#RUN sed -i 's/\r$//g' /start-celerybeat
-#RUN chmod +x /start-celerybeat
-
 COPY --chown=django:django ./docker/local/django/celery/flower/start.sh /start-flower
-RUN sed -i 's/\r$//g' /start-flower
-RUN chmod +x /start-flower
+
+RUN sed -i 's/\r$//g' /entrypoint /start /start-celeryworker /start-flower \
+  && chmod +x /entrypoint /start /start-celeryworker /start-flower
+
+#RUN sed -i 's/\r$//g' /start-celerybeat \
+#  && chmod +x /start-celerybeat
 
 # Copy application code
 COPY --chown=django:django backend/ ${APP_HOME}

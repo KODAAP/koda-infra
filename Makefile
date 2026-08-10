@@ -1,6 +1,10 @@
 	# Définir la variable avec une valeur par défaut
 COMPOSE_FILE ?= local.yml
 
+prepare:
+	mkdir -p ./backend/staticfiles ./backend/media
+	chmod -R 777 ./backend/staticfiles ./backend/media
+
 build:
 	docker compose -f $(COMPOSE_FILE) up --build -d --remove-orphans
 
