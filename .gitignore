@@ -4,16 +4,12 @@
 .env.production
 *.env
 .todo
-# Docker
-.docker/
-docker-compose.override.yml
 
 # Données sensibles
 data/
 logs/
 scripts/deploy.sh
 *.log
-local.yml
 
 # OS
 .DS_Store
