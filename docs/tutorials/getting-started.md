@@ -1,6 +1,6 @@
 # Installation locale
 
-Ce tutoriel vous guide pas à pas pour lancer Sycosur en environnement de développement local avec Docker Compose.
+Ce tutoriel vous guide pas à pas pour lancer Koda en environnement de développement local avec Docker Compose.
 
 ## Prérequis
 
@@ -14,8 +14,8 @@ Ce tutoriel vous guide pas à pas pour lancer Sycosur en environnement de dével
 ## Étape 1 — Cloner le dépôt
 
 ```bash
-git clone https://github.com/insuco/sycosur.git
-cd sycosur
+git clone https://github.com/insuco/koda.git
+cd koda
 ```
 
 ---
@@ -39,7 +39,7 @@ DOMAIN=localhost:8080
 # Base de données
 POSTGRES_HOST=postgres
 POSTGRES_PORT=5432
-POSTGRES_DB=sycosur
+POSTGRES_DB=koda
 POSTGRES_USER=admin
 POSTGRES_PASSWORD=votre-mot-de-passe
 
@@ -66,7 +66,7 @@ CELERY_RESULT_BACKEND=redis://redis:6379/0
 ## Étape 3 — Créer le réseau Docker
 
 ```bash
-docker network create sycosur_network
+docker network create koda_network
 ```
 
 ---
@@ -81,15 +81,15 @@ Les services démarrés sont :
 
 | Service | Rôle | Port local |
 |---|---|---|
-| `sycosur_nginx` | Reverse proxy (point d'entrée) | `8080` |
-| `sycosur_api` | Backend Django | interne `8001` |
-| `sycosur_client` | Frontend Next.js | interne `3000` |
-| `sycosur_postgres` | Base de données | `5432` |
-| `sycosur_redis` | Broker Celery + cache | interne |
-| `sycosur_celeryworker` | Traitement des exports async | — |
-| `sycosur_enketo` | Formulaires web ODK | interne `8005` |
-| `sycosur_flower` | Monitoring Celery | `5555` |
-| `sycosur_mailpit` | Serveur mail de dev | `8025` |
+| `koda_nginx` | Reverse proxy (point d'entrée) | `8080` |
+| `koda_api` | Backend Django | interne `8001` |
+| `koda_client` | Frontend Next.js | interne `3000` |
+| `koda_postgres` | Base de données | `5432` |
+| `koda_redis` | Broker Celery + cache | interne |
+| `koda_celeryworker` | Traitement des exports async | — |
+| `koda_enketo` | Formulaires web ODK | interne `8005` |
+| `koda_flower` | Monitoring Celery | `5555` |
+| `koda_mailpit` | Serveur mail de dev | `8025` |
 
 ---
 
@@ -98,8 +98,8 @@ Les services démarrés sont :
 Dans un autre terminal :
 
 ```bash
-docker exec -it sycosur_api python manage.py migrate
-docker exec -it sycosur_api python manage.py createsuperuser
+docker exec -it koda_api python manage.py migrate
+docker exec -it koda_api python manage.py createsuperuser
 ```
 
 ---
@@ -108,7 +108,7 @@ docker exec -it sycosur_api python manage.py createsuperuser
 
 | URL | Description |
 |---|---|
-| `http://localhost:8080` | Application Sycosur |
+| `http://localhost:8080` | Application Koda |
 | `http://localhost:8080/secret/` | Interface d'administration Django |
 | `http://localhost:5555` | Flower (monitoring Celery) |
 | `http://localhost:8025` | Mailpit (emails de dev) |
@@ -132,10 +132,10 @@ docker compose -f local.yml logs celeryworker -f
 
 ## Problèmes courants
 
-??? failure "Erreur `network sycosur_network not found`"
+??? failure "Erreur `network koda_network not found`"
     Créez le réseau manuellement :
     ```bash
-    docker network create sycosur_network
+    docker network create koda_network
     ```
 
 ??? failure "Erreur de connexion à ODK Central"

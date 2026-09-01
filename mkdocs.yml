@@ -9,6 +9,8 @@ docs_dir: docs
 theme:
   name: material
   language: fr
+  favicon: assets/images/favicon.ico
+  logo: assets/images/koda_title.png
   palette:
     - scheme: default
       primary: teal
@@ -59,6 +61,9 @@ markdown_extensions:
   - attr_list
   - md_in_html
   - tables
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - toc:
       permalink: true
 

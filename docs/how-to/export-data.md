@@ -1,6 +1,6 @@
 # Exporter les données d'une enquête
 
-Ce guide couvre tous les formats d'export disponibles dans Sycosur et les options avancées de filtrage.
+Ce guide couvre tous les formats d'export disponibles dans Koda et les options avancées de filtrage.
 
 ## Formats disponibles
 
@@ -108,7 +108,7 @@ En cas de problème, consultez Flower pour diagnostiquer :
 
 ```
 http://localhost:5555  (dev)
-https://sycosur.insuco.net/flower  (prod)
+https://koda.insuco.net/flower  (prod)
 ```
 
 Filtrez les tâches par nom `export_` pour voir uniquement les tâches d'export.

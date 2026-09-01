@@ -1,6 +1,6 @@
 # Gérer les utilisateurs
 
-Ce guide explique comment inviter, gérer et révoquer les accès des utilisateurs sur la plateforme Sycosur.
+Ce guide explique comment inviter, gérer et révoquer les accès des utilisateurs sur la plateforme Koda.
 
 ## Rôles disponibles
 

@@ -1,8 +1,8 @@
-# Architecture de Sycosur
+# Architecture de Koda
 
 ## Vue d'ensemble
 
-Sycosur est une application web full-stack organisée en microservices Docker. Elle s'appuie sur ODK Central comme serveur de collecte de données et expose une interface de supervision et d'export enrichie.
+Koda est une application web full-stack organisée en microservices Docker. Elle s'appuie sur ODK Central comme serveur de collecte de données et expose une interface de supervision et d'export enrichie.
 
 ---
 
@@ -15,7 +15,7 @@ graph TB
         E[Enquêteur terrain]
     end
 
-    subgraph Docker ["Docker Compose (sycosur_network)"]
+    subgraph Docker ["Docker Compose (koda_network)"]
         N[Nginx :8080]
         C[Next.js :3000]
         A[Django API :8001]
@@ -54,13 +54,13 @@ graph TB
 | Service | Image | Rôle | Port exposé |
 |---|---|---|---|
 | `nginx` | Custom (local/prod) | Reverse proxy, fichiers statiques | `8080` |
-| `api` | `sycosur_api` | Backend Django REST | `8001` (interne) |
-| `client` | `sycosur_client` | Frontend Next.js | `3000` (interne) |
+| `api` | `koda_api` | Backend Django REST | `8001` (interne) |
+| `client` | `koda_client` | Frontend Next.js | `3000` (interne) |
 | `postgres` | Custom PostgreSQL | Base de données relationnelle | `5432` |
 | `redis` | `redis:7.0-alpine` | Broker Celery + cache | interne |
-| `celeryworker` | `sycosur_celeryworker` | Traitement async des exports | — |
+| `celeryworker` | `koda_celeryworker` | Traitement async des exports | — |
 | `enketo` | `ghcr.io/enketo/enketo:7.6.1` | Formulaires web ODK | `8005` (interne) |
-| `flower` | `sycosur_flower` | Monitoring Celery | `5555` |
+| `flower` | `koda_flower` | Monitoring Celery | `5555` |
 | `mailpit` | `axllent/mailpit:v1.15` | Serveur mail (dev uniquement) | `8025`, `1025` |
 
 ---
@@ -68,7 +68,7 @@ graph TB
 ## Structure du dépôt
 
 ```
-sycosur/
+koda/
 ├── backend/                    # Application Django
 │   ├── config/                 # Configuration Django (settings, urls, celery)
 │   │   ├── settings/

@@ -1,6 +1,6 @@
 # Schéma Détaillé : Flux d'Authentification Basic Enketo
 
-Ce document détaille le fonctionnement technique du mode d'authentification **Basic** entre votre application Django (Sycosur), le serveur Enketo et ODK Central.
+Ce document détaille le fonctionnement technique du mode d'authentification **Basic** entre votre application Django (Koda), le serveur Enketo et ODK Central.
 
 ---
 
@@ -8,7 +8,7 @@ Ce document détaille le fonctionnement technique du mode d'authentification **B
 
 ```mermaid
 sequenceDiagram
-    participant D as Django (Sycosur)
+    participant D as Django (Koda)
     participant E as Enketo Server (Local/Ngrok)
     participant B as Navigateur (Utilisateur)
     participant C as ODK Central (Distant)

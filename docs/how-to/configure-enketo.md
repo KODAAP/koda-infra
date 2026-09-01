@@ -1,12 +1,12 @@
 # Configurer Enketo
 
-Ce guide explique comment configurer et intégrer le serveur Enketo Express avec Sycosur pour la collecte via formulaires web.
+Ce guide explique comment configurer et intégrer le serveur Enketo Express avec Koda pour la collecte via formulaires web.
 
 ## Qu'est-ce qu'Enketo ?
 
 [Enketo](https://enketo.org/) est un moteur de rendu de formulaires ODK XForms dans le navigateur. Il permet aux enquêteurs de remplir des formulaires directement depuis un navigateur web, sans application mobile.
 
-Sycosur utilise **Enketo Express 7.6.1** déployé comme service Docker.
+Koda utilise **Enketo Express 7.6.1** déployé comme service Docker.
 
 ---
 
@@ -43,11 +43,11 @@ En production, Enketo doit être accessible via le domaine public pour que les e
 ```env
 ENKETO_API_URL=http://enketo:8005/-/api/v2
 ENKETO_API_KEY=clé-longue-et-aléatoire
-ENKETO_PUBLIC_BASE_URL=https://sycosur.insuco.net
+ENKETO_PUBLIC_BASE_URL=https://koda.insuco.net
 ```
 
 !!! warning "ENKETO_PUBLIC_BASE_URL"
-    Cette variable doit correspondre à l'URL publique de votre instance Sycosur. Les liens de formulaires générés utilisent cette base URL. Une mauvaise configuration rend les formulaires inaccessibles aux enquêteurs.
+    Cette variable doit correspondre à l'URL publique de votre instance Koda. Les liens de formulaires générés utilisent cette base URL. Une mauvaise configuration rend les formulaires inaccessibles aux enquêteurs.
 
 ---
 
@@ -77,7 +77,7 @@ python -c "import secrets; print(secrets.token_urlsafe(64))"
 
 ## Types de liens Enketo générés
 
-Sycosur génère automatiquement deux types de liens pour chaque formulaire publié :
+Koda génère automatiquement deux types de liens pour chaque formulaire publié :
 
 | Type | Description | Usage |
 |---|---|---|
@@ -107,7 +107,7 @@ docker compose -f local.yml logs enketo -f
 ## Problèmes courants
 
 ??? failure "Les formulaires Enketo ne s'affichent pas"
-    Vérifiez que `ENKETO_PUBLIC_BASE_URL` correspond exactement à l'URL depuis laquelle les enquêteurs accèdent à Sycosur (avec ou sans `https://`, sans slash final).
+    Vérifiez que `ENKETO_PUBLIC_BASE_URL` correspond exactement à l'URL depuis laquelle les enquêteurs accèdent à Koda (avec ou sans `https://`, sans slash final).
 
 ??? failure "Erreur 401 lors de la génération des liens"
     La clé API dans `.env.local` ne correspond pas à celle dans `config.json`. Vérifiez les deux fichiers et redémarrez le conteneur Enketo.

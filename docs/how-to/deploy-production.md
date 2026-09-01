@@ -1,11 +1,11 @@
-# Déployer Sycosur en production
+# Déployer Koda en production
 
-Ce guide décrit le déploiement de Sycosur sur un serveur de production avec Docker Compose, Nginx et HTTPS.
+Ce guide décrit le déploiement de Koda sur un serveur de production avec Docker Compose, Nginx et HTTPS.
 
 ## Prérequis
 
 - Serveur Linux avec Docker et Docker Compose installés
-- Nom de domaine pointant vers le serveur (ex. `sycosur.insuco.net`)
+- Nom de domaine pointant vers le serveur (ex. `koda.insuco.net`)
 - Certificat SSL (Let's Encrypt recommandé)
 - Accès SSH au serveur
 - Instance ODK Central accessible depuis le serveur
@@ -15,8 +15,8 @@ Ce guide décrit le déploiement de Sycosur sur un serveur de production avec Do
 ## Étape 1 — Cloner le dépôt sur le serveur
 
 ```bash
-git clone https://github.com/insuco/sycosur.git /opt/sycosur
-cd /opt/sycosur
+git clone https://github.com/insuco/koda.git /opt/koda
+cd /opt/koda
 ```
 
 ---
@@ -27,29 +27,29 @@ cd /opt/sycosur
 
 ```env
 COMPOSE_BAKE=true
-DOMAIN=sycosur.insuco.net
+DOMAIN=koda.insuco.net
 ```
 
 ### Fichier `backend/.envs/.env.production`
 
 ```env
 # Django
-SITE_NAME="Sycosur"
+SITE_NAME="Koda"
 DJANGO_SECRET_KEY="CHANGEZ-MOI-clé-très-longue-et-aléatoire"
 DJANGO_ADMIN_URL="votre-url-admin-secrète/"
 DJANGO_SETTINGS_MODULE=config.settings.production
-DOMAIN=sycosur.insuco.net
+DOMAIN=koda.insuco.net
 
 # Email
 EMAIL_PORT=587
 EMAIL_HOST=smtp.votre-fournisseur.com
-DEFAULT_FROM_EMAIL="support-sycosur@insuco.com"
+DEFAULT_FROM_EMAIL="support-koda@insuco.com"
 
 # Base de données
 POSTGRES_HOST=postgres
 POSTGRES_PORT=5432
-POSTGRES_DB=sycosur
-POSTGRES_USER=sycosur_prod
+POSTGRES_DB=koda
+POSTGRES_USER=koda_prod
 POSTGRES_PASSWORD=MOT-DE-PASSE-FORT
 
 # Redis / Celery
@@ -65,7 +65,7 @@ SIGNING_KEY="CHANGEZ-MOI-clé-signing"
 # Google OAuth
 GOOGLE_CLIENT_ID="votre-client-id.apps.googleusercontent.com"
 GOOGLE_CLIENT_SECRET="votre-secret"
-REDIRECT_URIS="https://sycosur.insuco.net/api/v1/auth/google"
+REDIRECT_URIS="https://koda.insuco.net/api/v1/auth/google"
 
 # ODK Central
 ODK_CENTRAL_URL=https://odk.insuco.net/v1
@@ -76,7 +76,7 @@ ODK_VERIFY_SSL=True
 # Enketo
 ENKETO_API_URL=http://enketo:8005/-/api/v2
 ENKETO_API_KEY=votre-clé-enketo-longue
-ENKETO_PUBLIC_BASE_URL=https://sycosur.insuco.net
+ENKETO_PUBLIC_BASE_URL=https://koda.insuco.net
 
 # Google Drive (exports)
 GOOGLE_DRIVE_FOLDER_ID=votre-folder-id
@@ -87,7 +87,7 @@ GOOGLE_DRIVE_FOLDER_ID=votre-folder-id
 ## Étape 3 — Créer le réseau Docker
 
 ```bash
-docker network create sycosur_network
+docker network create koda_network
 ```
 
 ---
@@ -103,9 +103,9 @@ docker compose -f prod.yml up --build -d
 ## Étape 5 — Initialiser la base de données
 
 ```bash
-docker exec -it sycosur_api python manage.py migrate
-docker exec -it sycosur_api python manage.py collectstatic --noinput
-docker exec -it sycosur_api python manage.py createsuperuser
+docker exec -it koda_api python manage.py migrate
+docker exec -it koda_api python manage.py collectstatic --noinput
+docker exec -it koda_api python manage.py createsuperuser
 ```
 
 ---
@@ -117,16 +117,16 @@ Si vous utilisez un Nginx hôte (en dehors de Docker) pour gérer le SSL :
 ```nginx
 server {
     listen 80;
-    server_name sycosur.insuco.net;
+    server_name koda.insuco.net;
     return 301 https://$host$request_uri;
 }
 
 server {
     listen 443 ssl;
-    server_name sycosur.insuco.net;
+    server_name koda.insuco.net;
 
-    ssl_certificate /etc/letsencrypt/live/sycosur.insuco.net/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/sycosur.insuco.net/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/koda.insuco.net/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/koda.insuco.net/privkey.pem;
 
     location / {
         proxy_pass http://127.0.0.1:8080;
@@ -150,7 +150,7 @@ server {
 docker compose -f prod.yml ps
 
 # Santé de l'API
-curl -f https://sycosur.insuco.net/api/v1/health/ || echo "KO"
+curl -f https://koda.insuco.net/api/v1/health/ || echo "KO"
 
 # Logs en temps réel
 docker compose -f prod.yml logs -f api celeryworker
@@ -161,11 +161,11 @@ docker compose -f prod.yml logs -f api celeryworker
 ## Mise à jour de l'application
 
 ```bash
-cd /opt/sycosur
+cd /opt/koda
 git pull origin main
 docker compose -f prod.yml up --build -d
-docker exec -it sycosur_api python manage.py migrate
-docker exec -it sycosur_api python manage.py collectstatic --noinput
+docker exec -it koda_api python manage.py migrate
+docker exec -it koda_api python manage.py collectstatic --noinput
 ```
 
 ---
@@ -176,17 +176,17 @@ docker exec -it sycosur_api python manage.py collectstatic --noinput
 
 ```bash
 # Sauvegarde
-docker exec sycosur_postgres pg_dump -U sycosur_prod sycosur > backup_$(date +%Y%m%d).sql
+docker exec koda_postgres pg_dump -U koda_prod koda > backup_$(date +%Y%m%d).sql
 
 # Restauration
-docker exec -i sycosur_postgres psql -U sycosur_prod sycosur < backup_20260101.sql
+docker exec -i koda_postgres psql -U koda_prod koda < backup_20260101.sql
 ```
 
 ### Fichiers médias
 
 ```bash
 # Sauvegarder le dossier media (photos, exports)
-tar -czf media_backup_$(date +%Y%m%d).tar.gz /opt/sycosur/backend/media/
+tar -czf media_backup_$(date +%Y%m%d).tar.gz /opt/koda/backend/media/
 ```
 
 ---

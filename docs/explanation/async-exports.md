@@ -13,7 +13,7 @@ Traiter ces exports de manière **synchrone** (dans la requête HTTP) bloquerait
 
 ---
 
-## Architecture Celery dans Sycosur
+## Architecture Celery dans Koda
 
 ```mermaid
 graph LR
@@ -27,7 +27,7 @@ graph LR
         R[Results Backend]
     end
 
-    subgraph Worker["Celery Worker (sycosur_celeryworker)"]
+    subgraph Worker["Celery Worker (koda_celeryworker)"]
         W1[Task: export_excel]
         W2[Task: export_shapefile]
         W3[Task: export_media_zip]
@@ -107,7 +107,7 @@ const { data } = useGetExportStatusQuery(taskId, {
 
 ```python
 # config/celery_app.py
-app = Celery("sycosur")
+app = Celery("koda")
 app.config_from_object("django.conf:settings", namespace="CELERY")
 app.autodiscover_tasks()
 ```
@@ -157,5 +157,5 @@ def export_excel_task(self, ...):
 Redis a été choisi comme broker Celery (et non RabbitMQ) pour sa **simplicité opérationnelle** :
 - Déjà présent dans la stack (cache Django)
 - Pas de configuration supplémentaire
-- Performances suffisantes pour le volume de tâches d'export de Sycosur
+- Performances suffisantes pour le volume de tâches d'export de Koda
 - Persistance activée (`--appendonly yes`) pour ne pas perdre les tâches en cas de redémarrage

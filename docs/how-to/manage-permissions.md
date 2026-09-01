@@ -4,7 +4,7 @@ Ce guide explique comment contrôler l'accès aux formulaires et aux données pa
 
 ## Modèle de permissions
 
-Sycosur utilise un modèle hiérarchique à trois niveaux :
+Koda utilise un modèle hiérarchique à trois niveaux :
 
 ```
 Plateforme
@@ -73,7 +73,7 @@ Même procédure, sélectionnez **User** dans le menu de changement de rôle.
 
 ## Alertes et notifications automatiques
 
-Sycosur génère des alertes visuelles et des notifications dans les cas suivants :
+Koda génère des alertes visuelles et des notifications dans les cas suivants :
 
 | Situation | Alerte | Destinataire |
 |---|---|---|
@@ -86,10 +86,10 @@ Sycosur génère des alertes visuelles et des notifications dans les cas suivant
 
 ## Permissions ODK Central
 
-Sycosur synchronise les permissions avec ODK Central via son API. Chaque utilisateur Sycosur ayant accès à un formulaire est automatiquement configuré comme **App User** dans ODK Central pour ce formulaire.
+Koda synchronise les permissions avec ODK Central via son API. Chaque utilisateur Koda ayant accès à un formulaire est automatiquement configuré comme **App User** dans ODK Central pour ce formulaire.
 
 !!! info "Pool d'utilisateurs ODK"
-    Sycosur utilise un pool de comptes administrateurs ODK Central (`ODK_ADMIN_EMAIL`, `ODK_ADMIN_EMAIL2`) pour effectuer les opérations d'administration. Ces comptes ne correspondent pas aux utilisateurs finaux.
+    Koda utilise un pool de comptes administrateurs ODK Central (`ODK_ADMIN_EMAIL`, `ODK_ADMIN_EMAIL2`) pour effectuer les opérations d'administration. Ces comptes ne correspondent pas aux utilisateurs finaux.
 
 ---
 

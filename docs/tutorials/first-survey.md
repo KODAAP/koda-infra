@@ -4,7 +4,7 @@ Ce tutoriel vous guide de la création d'un formulaire XLSForm jusqu'à sa mise 
 
 ## Prérequis
 
-- Sycosur installé et accessible (voir [Installation locale](getting-started.md))
+- Koda installé et accessible (voir [Installation locale](getting-started.md))
 - Un fichier XLSForm `.xlsx` prêt (ou utilisez l'exemple ci-dessous)
 - Être connecté avec un compte **Administrateur** ou **Project Manager**
 
@@ -12,12 +12,12 @@ Ce tutoriel vous guide de la création d'un formulaire XLSForm jusqu'à sa mise 
 
 ## Étape 1 — Créer ou sélectionner un projet
 
-1. Connectez-vous à Sycosur (`http://localhost:8080`)
+1. Connectez-vous à Koda (`http://localhost:8080`)
 2. Dans la barre latérale, cliquez sur **Projets**
 3. Sélectionnez un projet existant ou créez-en un nouveau
 
 !!! info "Projets et ODK Central"
-    Chaque projet Sycosur est lié à un projet ODK Central. La synchronisation est automatique via l'API ODK Central configurée dans vos variables d'environnement.
+    Chaque projet Koda est lié à un projet ODK Central. La synchronisation est automatique via l'API ODK Central configurée dans vos variables d'environnement.
 
 ---
 
@@ -26,7 +26,7 @@ Ce tutoriel vous guide de la création d'un formulaire XLSForm jusqu'à sa mise 
 1. Dans le projet, accédez à **Form versions**
 2. Cliquez sur **Importer un formulaire**
 3. Sélectionnez votre fichier `.xlsx`
-4. Sycosur vérifie l'identifiant du questionnaire et crée automatiquement une nouvelle version
+4. Koda vérifie l'identifiant du questionnaire et crée automatiquement une nouvelle version
 
 !!! warning "Versioning automatique"
     Si un formulaire avec le même identifiant existe déjà, une nouvelle version est créée automatiquement. L'ancienne version reste accessible pour les soumissions existantes.
@@ -88,7 +88,7 @@ Une fois les premières soumissions reçues :
 
 ```mermaid
 graph TD
-    A[Créer XLSForm] --> B[Importer dans Sycosur]
+    A[Créer XLSForm] --> B[Importer dans Koda]
     B --> C{Vérification ID}
     C -->|Nouveau| D[Création formulaire]
     C -->|Existant| E[Nouvelle version]
@@ -99,5 +99,5 @@ graph TD
     G --> I[Collecte terrain]
     H --> I
     I --> J[Soumissions ODK Central]
-    J --> K[Supervision Sycosur]
+    J --> K[Supervision Koda]
 ```

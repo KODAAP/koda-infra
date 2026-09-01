@@ -2,7 +2,7 @@
 
 ## Philosophie du modèle
 
-Sycosur adopte un modèle de permissions **hiérarchique et contextuel** : les droits d'un utilisateur dépendent à la fois de son rôle global sur la plateforme et de son rôle dans chaque projet.
+Koda adopte un modèle de permissions **hiérarchique et contextuel** : les droits d'un utilisateur dépendent à la fois de son rôle global sur la plateforme et de son rôle dans chaque projet.
 
 Ce modèle répond aux besoins terrain d'Insuco :
 - Des **administrateurs** qui gèrent la plateforme globalement
@@ -83,9 +83,9 @@ erDiagram
 
 ## Synchronisation avec ODK Central
 
-Les permissions Sycosur sont **synchronisées avec ODK Central** via son système d'App Users :
+Les permissions Koda sont **synchronisées avec ODK Central** via son système d'App Users :
 
-1. Quand un utilisateur Sycosur reçoit accès à un formulaire → un **App User ODK** est créé/mis à jour
+1. Quand un utilisateur Koda reçoit accès à un formulaire → un **App User ODK** est créé/mis à jour
 2. Quand l'accès est révoqué → l'App User ODK est supprimé ou désactivé
 3. Les App Users ODK permettent à ODK Collect de télécharger les formulaires autorisés
 

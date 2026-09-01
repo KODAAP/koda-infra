@@ -2,9 +2,9 @@
 
 ## Contexte
 
-Les enquêtes ODK collectées via Sycosur contiennent fréquemment des données géographiques : coordonnées GPS des ménages enquêtés, tracés de routes, délimitations de zones. Ces données ont une valeur analytique importante pour les projets Insuco (études d'impact, cartographie sociale, suivi terrain).
+Les enquêtes ODK collectées via Koda contiennent fréquemment des données géographiques : coordonnées GPS des ménages enquêtés, tracés de routes, délimitations de zones. Ces données ont une valeur analytique importante pour les projets Insuco (études d'impact, cartographie sociale, suivi terrain).
 
-Sycosur intègre une **chaîne de traitement SIG complète** pour transformer les soumissions ODK en données géographiques exploitables.
+Koda intègre une **chaîne de traitement SIG complète** pour transformer les soumissions ODK en données géographiques exploitables.
 
 ---
 
@@ -22,7 +22,7 @@ Ces trois bibliothèques forment l'écosystème Python SIG standard, sans néces
 
 ## Types de géométries supportés
 
-ODK Central supporte trois types de questions géographiques, tous gérés par Sycosur :
+ODK Central supporte trois types de questions géographiques, tous gérés par Koda :
 
 | Type ODK | Géométrie | Export Shapefile |
 |---|---|---|
@@ -72,7 +72,7 @@ Le service de traitement SIG parse ces chaînes et crée les objets géométriqu
 
 ## Carte interactive
 
-En plus des exports fichiers, Sycosur propose une **vue carte interactive** dans l'interface web :
+En plus des exports fichiers, Koda propose une **vue carte interactive** dans l'interface web :
 
 - Affichage des soumissions géolocalisées sur une carte (Leaflet / MapLibre)
 - Clustering automatique pour les grandes densités de points

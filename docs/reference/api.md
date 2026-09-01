@@ -1,13 +1,13 @@
 # Référence API REST
 
-Sycosur expose une API REST Django REST Framework. La documentation interactive complète est disponible via Swagger UI.
+Koda expose une API REST Django REST Framework. La documentation interactive complète est disponible via Swagger UI.
 
 ## Accès à la documentation interactive
 
 | Environnement | URL |
 |---|---|
 | Développement | `http://localhost:8080/api/schema/swagger-ui/` |
-| Production | `https://sycosur.insuco.net/api/schema/swagger-ui/` |
+| Production | `https://koda.insuco.net/api/schema/swagger-ui/` |
 
 ---
 
@@ -144,7 +144,7 @@ Redirige vers le flux OAuth Google. Configuré via `GOOGLE_CLIENT_ID` et `REDIRE
 
 ## API ODK Central
 
-Sycosur consomme l'API ODK Central en interne. La spécification complète de l'API ODK Central est disponible dans [`docs/api.yaml`](../api.yaml) (OpenAPI 3.0).
+Koda consomme l'API ODK Central en interne. La spécification complète de l'API ODK Central est disponible dans [`docs/api.yaml`](../api.yaml) (OpenAPI 3.0).
 
 Pour consulter la documentation ODK Central :
 - [Documentation officielle ODK Central API](https://docs.getodk.org/central-api/)

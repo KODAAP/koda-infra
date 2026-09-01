@@ -86,7 +86,7 @@ Pour surveiller l'état de vos exports en temps réel :
 ```mermaid
 sequenceDiagram
     participant U as Utilisateur
-    participant S as Sycosur (Django)
+    participant S as Koda (Django)
     participant C as Celery Worker
     participant O as ODK Central
     participant R as Redis

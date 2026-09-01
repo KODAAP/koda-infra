@@ -1,6 +1,6 @@
-# Sycosur — Documentation
+# Koda — Documentation
 
-**Sycosur** est une plateforme web de gestion d'enquêtes de terrain développée par [Insuco](https://insuco.net). Elle permet de piloter l'intégralité du cycle de vie des enquêtes ODK : création, déploiement, collecte, supervision et export des données.
+**Koda** est une plateforme web de gestion d'enquêtes de terrain développée par [Insuco](https://insuco.net). Elle permet de piloter l'intégralité du cycle de vie des enquêtes ODK : création, déploiement, collecte, supervision et export des données.
 
 ---
 
@@ -59,4 +59,4 @@ graph LR
 - **Collecte** : ODK Central (API v1), Enketo Express 7.6
 - **SIG** : Fiona, GeoPandas, Shapely
 - **Infrastructure** : Docker Compose, Nginx, GitHub Actions
-- **Domaine** : `sycosur.insuco.net`
+- **Domaine** : `koda.insuco.net`

@@ -1,6 +1,6 @@
 # Variables d'environnement
 
-Toutes les variables de configuration de Sycosur sont définies dans `backend/.envs/.env.local` (développement) ou `backend/.envs/.env.production` (production).
+Toutes les variables de configuration de Koda sont définies dans `backend/.envs/.env.local` (développement) ou `backend/.envs/.env.production` (production).
 
 !!! danger "Sécurité"
     Ne committez jamais les fichiers `.env*` contenant des secrets réels. Le fichier `.gitignore` exclut déjà `backend/.envs/`.
@@ -11,7 +11,7 @@ Toutes les variables de configuration de Sycosur sont définies dans `backend/.e
 
 | Variable | Obligatoire | Exemple | Description |
 |---|:---:|---|---|
-| `SITE_NAME` | ✅ | `"Sycosur2.0"` | Nom affiché dans les emails et l'interface |
+| `SITE_NAME` | ✅ | `"Koda2.0"` | Nom affiché dans les emails et l'interface |
 | `DJANGO_SECRET_KEY` | ✅ | `"clé-aléatoire-longue"` | Clé secrète Django (min. 50 caractères) |
 | `DJANGO_ADMIN_URL` | ✅ | `"secret/"` | Chemin URL de l'interface d'administration |
 | `DJANGO_SETTINGS_MODULE` | ✅ | `config.settings.local` | Module de settings à utiliser |
@@ -28,7 +28,7 @@ Toutes les variables de configuration de Sycosur sont définies dans `backend/.e
 |---|:---:|---|---|
 | `POSTGRES_HOST` | ✅ | `postgres` | Hôte PostgreSQL (nom du service Docker) |
 | `POSTGRES_PORT` | ✅ | `5432` | Port PostgreSQL |
-| `POSTGRES_DB` | ✅ | `sycosur` | Nom de la base de données |
+| `POSTGRES_DB` | ✅ | `koda` | Nom de la base de données |
 | `POSTGRES_USER` | ✅ | `admin` | Utilisateur PostgreSQL |
 | `POSTGRES_PASSWORD` | ✅ | `mot-de-passe` | Mot de passe PostgreSQL |
 
@@ -40,7 +40,7 @@ Toutes les variables de configuration de Sycosur sont définies dans `backend/.e
 |---|:---:|---|---|
 | `EMAIL_HOST` | ✅ | `mailpit` (dev) / `smtp.gmail.com` (prod) | Serveur SMTP |
 | `EMAIL_PORT` | ✅ | `1025` (dev) / `587` (prod) | Port SMTP |
-| `DEFAULT_FROM_EMAIL` | ✅ | `support-sycosur@insuco.com` | Adresse expéditeur par défaut |
+| `DEFAULT_FROM_EMAIL` | ✅ | `support-koda@insuco.com` | Adresse expéditeur par défaut |
 
 ---
 
@@ -67,7 +67,7 @@ Toutes les variables de configuration de Sycosur sont définies dans `backend/.e
 | `ODK_VERIFY_SSL` | ✅ | `False` (dev) / `True` (prod) | Vérification du certificat SSL ODK |
 
 !!! info "Pool d'utilisateurs ODK"
-    Sycosur utilise un ou deux comptes administrateurs ODK Central pour toutes les opérations API. Ces comptes doivent avoir les droits d'administration sur ODK Central.
+    Koda utilise un ou deux comptes administrateurs ODK Central pour toutes les opérations API. Ces comptes doivent avoir les droits d'administration sur ODK Central.
 
 ---
 
@@ -105,7 +105,7 @@ Le fichier `.env` à la racine du projet contient uniquement deux variables util
 
 ```env
 COMPOSE_BAKE=true
-DOMAIN=sycosur.insuco.net
+DOMAIN=koda.insuco.net
 ```
 
 | Variable | Description |

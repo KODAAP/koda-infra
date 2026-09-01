@@ -2,12 +2,12 @@
 
 ## Pourquoi ODK Central ?
 
-Sycosur n'est pas un serveur de collecte — c'est une **couche de supervision et d'export** au-dessus d'ODK Central. Ce choix architectural repose sur plusieurs raisons :
+Koda n'est pas un serveur de collecte — c'est une **couche de supervision et d'export** au-dessus d'ODK Central. Ce choix architectural repose sur plusieurs raisons :
 
 1. **ODK Central est la référence** : standard de facto pour la collecte de données terrain, maintenu par la communauté ODK avec des milliers de déploiements dans le monde
 2. **Compatibilité mobile** : ODK Collect (Android) et Enketo (web) sont nativement compatibles avec ODK Central via le protocole OpenRosa
-3. **API publique et stable** : ODK Central expose une API REST complète (OpenAPI 3.0) qui permet à Sycosur de tout piloter programmatiquement
-4. **Séparation des responsabilités** : ODK Central gère la collecte et le stockage brut ; Sycosur gère la supervision, les permissions métier et les exports enrichis
+3. **API publique et stable** : ODK Central expose une API REST complète (OpenAPI 3.0) qui permet à Koda de tout piloter programmatiquement
+4. **Séparation des responsabilités** : ODK Central gère la collecte et le stockage brut ; Koda gère la supervision, les permissions métier et les exports enrichis
 
 ---
 
@@ -15,7 +15,7 @@ Sycosur n'est pas un serveur de collecte — c'est une **couche de supervision e
 
 ```mermaid
 graph LR
-    subgraph Sycosur
+    subgraph Koda
         A[Django Backend]
         B[Celery Worker]
     end
@@ -37,7 +37,7 @@ graph LR
 
 ## Pool d'utilisateurs ODK
 
-Sycosur utilise un **pool de comptes administrateurs ODK Central** pour effectuer toutes les opérations API. Ces comptes sont configurés via :
+Koda utilise un **pool de comptes administrateurs ODK Central** pour effectuer toutes les opérations API. Ces comptes sont configurés via :
 
 ```env
 ODK_ADMIN_EMAIL=admin@insuco.com
@@ -46,7 +46,7 @@ ODK_ADMIN_EMAIL2=admin2@insuco.com   # optionnel, pour la redondance
 ODK_ADMIN_PASSWORD2=...
 ```
 
-Ces comptes doivent avoir le rôle **Administrator** sur ODK Central. Ils ne correspondent pas aux utilisateurs finaux de Sycosur.
+Ces comptes doivent avoir le rôle **Administrator** sur ODK Central. Ils ne correspondent pas aux utilisateurs finaux de Koda.
 
 ---
 
@@ -54,7 +54,7 @@ Ces comptes doivent avoir le rôle **Administrator** sur ODK Central. Ils ne cor
 
 ### Gestion des formulaires
 
-| Opération Sycosur | Appel ODK Central |
+| Opération Koda | Appel ODK Central |
 |---|---|
 | Importer un XLSForm | `POST /projects/{id}/forms` |
 | Publier un formulaire | `PATCH /projects/{id}/forms/{xmlFormId}` (state: open) |
@@ -63,7 +63,7 @@ Ces comptes doivent avoir le rôle **Administrator** sur ODK Central. Ils ne cor
 
 ### Gestion des App Users
 
-| Opération Sycosur | Appel ODK Central |
+| Opération Koda | Appel ODK Central |
 |---|---|
 | Créer un App User | `POST /projects/{id}/app-users` |
 | Assigner un formulaire | `POST /projects/{id}/forms/{xmlFormId}/assignments` |
@@ -100,7 +100,7 @@ ODK_VERIFY_SSL=True
 
 ## Synchronisation et cohérence des données
 
-Sycosur maintient une **copie locale des métadonnées** (projets, formulaires, versions) dans PostgreSQL pour des raisons de performance. Les soumissions elles-mêmes restent dans ODK Central et sont récupérées à la demande (export, affichage tableau).
+Koda maintient une **copie locale des métadonnées** (projets, formulaires, versions) dans PostgreSQL pour des raisons de performance. Les soumissions elles-mêmes restent dans ODK Central et sont récupérées à la demande (export, affichage tableau).
 
 Cette approche garantit :
 - **Rapidité** : les listes de projets/formulaires sont servies depuis PostgreSQL
