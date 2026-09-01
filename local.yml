@@ -1,0 +1,180 @@
+services:
+  api: &api
+    build:
+      context: .
+      dockerfile: docker/local/django/Dockerfile
+    image: koda_api
+    container_name: koda_api
+    volumes:
+      - ./backend/:/app:z
+      # MODIFICATION: Volumes nommés au lieu des bind mounts locaux pour éviter les conflits de permissions
+      - django_staticfiles:/app/staticfiles
+      - django_media:/app/media
+    expose:
+      - "8001"
+    env_file:
+      - ./backend/.envs/.env.local
+    depends_on:
+      - postgres
+      - mailpit
+      - redis
+    command: /start
+    networks:
+      - koda_network
+
+  postgres:
+    build:
+      context: .
+      dockerfile: docker/local/postgres/Dockerfile
+    image: koda_postgres
+    container_name: koda_postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - ./backend/.envs/.env.local
+    networks:
+      - koda_network
+
+  mailpit:
+    image: docker.io/axllent/mailpit:v1.15
+    container_name: koda_mailpit
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+    volumes:
+      - mailpit_data:/data
+    environment:
+      MP_MAX_MESSAGES: 5000
+      MP_DATA_FILE: /data/mailpit.db
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+    networks:
+      - koda_network
+
+  client:
+    build:
+      context: .
+      dockerfile: docker/local/client/Dockerfile
+    container_name: koda_client
+    image: koda_client
+    expose:
+      - "3000"
+    volumes:
+      - ./client:/app
+      # MODIFICATION: Volumes nommés au lieu de volumes anonymes
+      - client_node_modules:/app/node_modules
+      - client_next_cache:/app/.next
+    environment:
+      - NODE_ENV=development
+      - WATCHPACK_POLLING=true
+#      - NEXT_TURBOPACK_WATCH_POLLING_INTERVAL=1000
+      - CHOKIDAR_USEPOLLING=true
+    restart: unless-stopped
+    networks:
+      - koda_network
+
+# enketo: (service désactivé)
+#   image: ghcr.io/enketo/enketo:7.6.1
+#   container_name: koda_enketo
+#   expose:
+#      - "8005"
+#   volumes:
+#      - ./docker/local/enketo/config.json:/srv/src/enketo/packages/enketo-express/config/config.json
+#   depends_on:
+#     - redis
+#   restart: unless-stopped
+#   networks:
+#     - koda_network
+
+
+  redis:
+    image: redis:7.0-alpine3.19
+    command: redis-server --appendonly yes
+    container_name: koda_redis
+    volumes:
+      - redis_data:/data
+    # MODIFICATION: Ajout du healthcheck Redis
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - koda_network
+
+  celeryworker:
+    <<: *api
+    image: koda_celeryworker
+    container_name: koda_celeryworker
+    command: /start-celeryworker
+
+#  celerybeat:
+#    <<: *api
+#    image: koda_celerybeat
+#    container_name: koda_celerybeat
+#    command: /start-celerybeat
+
+  flower:
+    <<: *api
+    image: koda_flower
+    container_name: koda_flower
+    ports:
+      - "5555:5555"
+    command: /start-flower
+
+  nginx:
+    build:
+      context: docker/local/nginx
+      dockerfile: Dockerfile
+    restart: always
+    container_name: koda_nginx
+    ports:
+      - "8080:80"
+      - "9090:9090"
+    volumes:
+      # MODIFICATION: Utilisation des volumes nommés partagés
+      - django_staticfiles:/app/staticfiles:ro
+      - django_media:/app/media:ro
+      - ./site:/app/site:ro
+      - logs_store:/var/log/nginx
+    depends_on:
+      - api
+      - client
+      # MODIFICATION: Dépendance vers le service docs
+      #- enketo
+      - docs
+    networks:
+      - koda_network
+
+  docs:
+    image: koda_api
+    container_name: koda_docs
+    # MODIFICATION: Exposition interne du port 8000 pour Nginx (retrait du user: root)
+    expose:
+      - "8000"
+    volumes:
+      - .:/app_root:z # Volume nommé copiant l'intégrité du projet en lecture et ecriture
+    env_file:
+      - ./backend/.envs/.env.local
+    command: mkdocs serve -f /app_root/mkdocs.yml -a 0.0.0.0:8000
+    depends_on:
+      - postgres
+    networks:
+      - koda_network
+
+volumes:
+  postgres_data: {}
+  mailpit_data: {}
+  logs_store: {}
+  redis_data: {}
+  # MODIFICATION: Déclaration des nouveaux volumes nommés
+  django_staticfiles: {}
+  django_media: {}
+  client_node_modules: {}
+  client_next_cache: {}
+
+networks:
+  koda_network:
+    external: true
