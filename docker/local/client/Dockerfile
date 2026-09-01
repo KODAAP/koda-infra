@@ -16,7 +16,9 @@ COPY client/package.json client/pnpm-lock.yaml ./
 
 # Cache pnpm store → énorme gain de temps
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
-    pnpm install --frozen-lockfile
+    pnpm install --frozen-lockfile \
+        --store-dir=/pnpm/store \
+        --fetch-timeout=120000
 
 # === DEVELOPMENT (image finale pour dev) ===
 FROM base AS development
