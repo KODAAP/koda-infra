@@ -92,3 +92,4 @@ nav:
     - Exports asynchrones (Celery): explanation/async-exports.md
     - Stratégie SIG: explanation/gis-strategy.md
     - Gestion des rôles: explanation/roles-permissions.md
+    - Pipeline CI/CD: explanation/ci-cd.md
