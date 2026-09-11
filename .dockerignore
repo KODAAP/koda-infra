@@ -59,6 +59,7 @@ backend/.envs/*
 .env
 .env.*
 !.env.example
+!client/.env.prod
 
 # === OS ===
 .DS_Store
