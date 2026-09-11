@@ -1,186 +1,259 @@
-# Guide de déploiement — Build → Push → Deploy (VM OVH)
+# Guide de déploiement continu — Build → Push → Deploy (VM OVH)
 
-Ce document rassemble toute la configuration et les explications nécessaires pour :
-- builder et pousser les images Docker listées dans `docker/services.yaml` (manifest-driven),
-- déployer sur une VM OVH via SSH (sans Kubernetes), en exécutant des commandes distantes depuis GitHub Actions.
-
-Le fichier PDF généré à partir de ce Markdown sera créé via le workflow `.github/workflows/generate-pdf.yml` (exécution manuelle `workflow_dispatch`).
+Ce document décrit l'architecture et la procédure de déploiement continu automatisé pour le projet **KODAAP**.
+Le pipeline repose intégralement sur **GitHub Actions**, le registre **GHCR** (*GitHub Container Registry*) et une connexion **SSH** vers la machine virtuelle OVH, **sans nécessiter de script `deploy.sh` sur le serveur**.
 
 ---
 
-## Arborescence recommandée
+## 1. Vue d'ensemble de l'architecture
 
-- docker/
-  - services.yaml        # manifeste central (liste des services + meta)
-  - prod/
-    - api/
-      - Dockerfile
-      - .dockerignore
-    - client/
-      - Dockerfile
-      - .dockerignore
-    - worker/            # optionnel
-      - Dockerfile
-  - README.md            # conventions
+### Deux images applicatives sur GHCR, zéro duplication
+Pour optimiser les temps de compilation CI et l'espace de stockage sur le registre :
+- **`ghcr.io/kodaap/koda-api`** : Image unique pour tous les services Django (`api`, `celeryworker`, `celerybeat`, `flower`).
+  - Ils partagent le même code source (`backend/`) et les mêmes dépendances Python.
+  - Chaque conteneur instancie cette image en surchargeant simplement sa commande d'exécution (`/start`, `/start-celeryworker`, `/start-celerybeat`, `/start-flower`).
+- **`ghcr.io/kodaap/koda-client`** : Image pour le frontend web.
+- **Services tiers (`postgres`, `redis`)** : Utilisent directement les images certifiées officielles depuis Docker Hub (`postgres:16-bullseye`, `redis:7.0-alpine3.19`). Inutile de les re-builder ou de les héberger sur GHCR.
 
-- infra/
-  - docker-compose.yml  # versionné (compose de référence pour la VM)
-
-- .github/
-  - workflows/
-    - deploy.yml         # build & push & deploy via SSH
-    - generate-pdf.yml   # convertit docs/deploy-guide.md -> docs/deploy-guide.pdf (manually)
-
-- docs/
-  - deploy-guide.md      # ce fichier (source)
-  - deploy-guide.pdf     # généré par le workflow (OPTIONNEL)
-
----
-
-## Fichiers essentiels expliqués
-
-1) `docker/services.yaml`
-
-  - Single source of truth pour les services à builder.
-  - Exemple minimal :
-
-```yaml
-services:
-  - name: api
-    context: docker/prod/api
-    dockerfile: Dockerfile
-    platforms: ["linux/amd64","linux/arm64"]
-
-  - name: client
-    context: docker/prod/client
-    dockerfile: Dockerfile
-    platforms: ["linux/amd64","linux/arm64"]
-
-  - name: worker
-    context: docker/prod/worker
-    dockerfile: Dockerfile
-    platforms: ["linux/amd64"]
+```
+       [ Push sur main / dispatch ]
+                     │
+                     ▼
+       ┌───────────────────────────┐
+       │   GitHub Actions (CI/CD)  │
+       └─────────────┬─────────────┘
+                     │
+         ┌───────────┴───────────┐
+         ▼                       ▼
+┌──────────────────┐    ┌──────────────────┐
+│ Build Backend    │    │ Build Frontend   │
+│ (Django)         │    │ (Client)         │
+└────────┬─────────┘    └────────┬─────────┘
+         │                       │
+         └───────────┬───────────┘
+                     ▼
+        [ Push sur ghcr.io ]
+        • koda-api:<sha> & latest
+        • koda-client:<sha> & latest
+                     │
+                     ▼ (SSH automatique)
+        ┌────────────────────────┐
+        │        VM OVH          │
+        │ • Copie prod.yml       │
+        │ • docker compose pull  │
+        │ • docker compose up -d │
+        │ • migrate & static     │
+        │ • docker image prune   │
+        └────────────────────────┘
 ```
 
-2) Workflow `.github/workflows/deploy.yml` (manifest-driven, build & push, puis deploy via SSH)
+---
 
-- Ce workflow lit `docker/services.yaml`, génère une matrix, build/push chaque image sur GHCR
-  (`ghcr.io/${{ github.repository_owner }}/${{ service }}`), puis exécute des commandes sur la VM via SSH :
-  il génère un `docker-compose.override.yml` localement contenant les images taggées (`sha-${{ github.sha }}`),
-  transfère ce fichier sur la VM et exécute `docker compose pull && docker compose up -d`.
+## 2. Arborescence du projet
 
-- Pré-requis secrets GitHub :
-  - `SERVER_HOST` (IP ou hostname)
-  - `SERVER_USER` (ex: deploy)
-  - `SSH_PRIVATE_KEY` (clé privée pour l'utilisateur deploy)
-  - `GHCR_PAT_SERVER` (PAT minimal `read:packages` pour pull depuis GHCR)
-
-3) `infra/docker-compose.yml`
-
-- Compose « source of truth » pour la VM. Contient la configuration complète des services (ports, volumes, envs,
-  réseaux). Le workflow ne change rien d’autre que l’image via `docker-compose.override.yml` généré.
-
-4) (Optionnel) `deploy.sh` sur la VM
-
-- Si tu préfères un script réutilisable côté serveur, tu peux placer un `deploy.sh` qui :
-  - effectue `docker login ghcr.io`,
-  - `envsubst` un template `docker-compose.tpl.yml` en `docker-compose.yml`,
-  - `docker compose pull` puis `docker compose up -d`.
+```
+koda-infra/
+├── .github/
+│   └── workflows/
+│       └── deploy.yml          # Pipeline CI/CD complet (Build, Push & SSH Deploy)
+├── backend/                    # Submodule Git (code Django)
+├── client/                     # Submodule Git (code Frontend)
+├── docker/
+│   └── prod/
+│       ├── django/
+│       │   ├── Dockerfile      # Dockerfile unique pour api, celery, flower
+│       │   ├── entrypoint      # Script d'initialisation
+│       │   ├── start           # Lancement Gunicorn/Django
+│       │   └── celery/         # Scripts pour worker, beat, flower
+│       └── client/
+│           └── Dockerfile      # Dockerfile frontend
+├── docs/
+│   └── deploy-guide.md         # Cette documentation
+└── prod.yml                    # Compose de production
+```
 
 ---
 
-## Contenu du workflow `deploy.yml` (rappels)
+## 3. Configuration de production (`prod.yml`)
 
-Le workflow principal (`.github/workflows/deploy.yml`) construit et push :
-- Utilise `docker/setup-buildx-action`, `docker/build-push-action`, cache `type=gha`.
-- Login à GHCR avec `secrets.GITHUB_TOKEN` (ou `GHCR_PAT` si tu préfères).
-- Génère `docker-compose.override.yml` (base64) puis SSH sur la VM et applique `docker compose pull && up -d`.
-
-> Voir le fichier concret dans le repo `.github/workflows/deploy.yml` (si déjà présent). Sinon, je peux
-> générer ce workflow à partir du manifeste `docker/services.yaml`.
-
----
-
-## Exemple de `docker-compose.tpl.yml` (template côté serveur si tu utilises `deploy.sh`)
+Le fichier `prod.yml` fait référence dynamiquement au tag publié par la CI via la variable `${IMAGE_TAG:-latest}` :
 
 ```yaml
-version: "3.8"
 services:
-  api:
-    image: ${IMAGE_api}
-    restart: always
-    environment:
-      - NODE_ENV=production
-    ports:
-      - "3000:3000"
+  api: &api
+    image: ghcr.io/kodaap/koda-api:${IMAGE_TAG:-latest}
+    container_name: koda_api
+    restart: unless-stopped
+    volumes:
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+    expose:
+      - "8000"
+    env_file:
+      - ./backend/.envs/.env.prod
+    depends_on:
+      - postgres
+      - redis
+    command: /start
+    networks:
+      - reverseProxy_nw
+
+  postgres:
+    image: postgres:16-bullseye
+    container_name: koda_postgres
+    restart: unless-stopped
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - ./backend/.envs/.env.prod
+    networks:
+      - reverseProxy_nw
 
   client:
-    image: ${IMAGE_client}
-    restart: always
-    ports:
-      - "80:80"
+    image: ghcr.io/kodaap/koda-client:${IMAGE_TAG:-latest}
+    container_name: koda_client
+    restart: unless-stopped
+    env_file:
+      - "./client/.env.prod"
+    networks:
+      - reverseProxy_nw
 
-  worker:
-    image: ${IMAGE_worker}
-    restart: always
+  redis:
+    image: redis:7.0-alpine3.19
+    container_name: koda_redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    networks:
+      - reverseProxy_nw
+
+  celeryworker:
+    <<: *api
+    container_name: koda_celeryworker
+    command: /start-celeryworker
+
+  flower:
+    <<: *api
+    container_name: koda_flower
+    ports:
+      - "5555:5555"
+    command: /start-flower
+
+networks:
+  reverseProxy_nw:
+    external: true
+
+volumes:
+  media_volume:
+  static_volume:
+  postgres_data:
+  redis_data:
 ```
 
 ---
 
-## Exemple minimal `deploy.sh` (sur la VM) — optionnel
+## 4. Secrets GitHub Actions requis
+
+Dans GitHub (`Settings` > `Secrets and variables` > `Actions`), configurez les secrets suivants :
+
+| Secret | Description | Exemple |
+| :--- | :--- | :--- |
+| `GH_PAT` | GitHub Personal Access Token avec droit `repo` pour cloner les submodules `backend` et `client` | `ghp_xxxxxxxxxxxx` |
+| `GHCR_PULL_TOKEN` | GitHub PAT avec le scope `read:packages` permettant à la VM de télécharger les images GHCR | `ghp_yyyyyyyyyyyy` |
+| `SSH_HOST` | Adresse IP ou domaine de la VM OVH | `ns526301.ip-149-56-16.net` |
+| `SSH_USER` | Utilisateur SSH de déploiement sur la VM | `ubuntu` |
+| `SSH_PORT` | Port SSH du serveur | `22` (ou port personnalisé ex: `49160`) |
+| `SSH_KEY` | Clé privée SSH (l'équivalent public doit être dans `~/.ssh/authorized_keys` sur la VM) | `-----BEGIN OPENSSH PRIVATE KEY-----...` |
+| `DEPLOY_PATH` *(optionnel)* | Chemin du dossier projet sur la VM | `/home/ubuntu/koda-infra` (valeur par défaut) |
+
+---
+
+## 5. Préparation initiale de la VM OVH
+
+À exécuter **une seule fois** sur la machine virtuelle :
+
+### 1. Installer Docker & Docker Compose v2
+```bash
+sudo apt-get update
+sudo apt-get install -y ca-certificates curl gnupg
+# Suivre l'installation officielle Docker pour Ubuntu/Debian
+# S'assurer que l'utilisateur appartient au groupe docker :
+sudo usermod -aG docker $USER
+```
+
+### 2. Créer le réseau Docker externe
+Le reverse proxy (Traefik, Nginx Proxy Manager, etc.) et Kodaap communiquent via le réseau externe `reverseProxy_nw` :
+```bash
+docker network create reverseProxy_nw
+```
+
+### 3. Créer l'arborescence et les variables d'environnement
+Sur la VM, créez le répertoire de l'application et les fichiers d'environnement secrets :
+```bash
+mkdir -p /home/ubuntu/koda-infra/backend/.envs
+mkdir -p /home/ubuntu/koda-infra/client
+
+# Créer les fichiers d'environnement :
+nano /home/ubuntu/koda-infra/backend/.envs/.env.prod
+nano /home/ubuntu/koda-infra/client/.env.prod
+```
+
+---
+
+## 6. Déroulement du déploiement automatisé
+
+À chaque commit sur `main` (ou déclenchement manuel via l'onglet **Actions** > **Run workflow**) :
+
+1. **Job `build-push-docker`** :
+   - Récupère le dépôt racine et les sous-modules Git via `GH_PAT`.
+   - Calcule le tag de version court `sha-<commit>`.
+   - Compile l'image `koda-api` avec Docker Buildx et le cache GitHub Actions (`cache-to: type=gha`).
+   - Compile l'image `koda-client`.
+   - Publie les images sur `ghcr.io/kodaap/...` avec les tags `sha-<commit>` et `latest`.
+2. **Job `deploy`** :
+   - Transfère automatiquement la dernière version de `prod.yml` sur la VM OVH via `appleboy/scp-action`.
+   - Ouvre une session SSH sécurisée via `appleboy/ssh-action` et exécute séquentiellement :
+     ```bash
+     # 1. Authentification au registre
+     echo "$GHCR_PULL_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+     
+     # 2. Assignation du tag de version
+     export IMAGE_TAG="$IMAGE_TAG"
+     
+     # 3. Récupération des images
+     docker compose -f prod.yml pull
+     
+     # 4. Redémarrage des conteneurs
+     docker compose -f prod.yml up -d --remove-orphans
+     
+     # 5. Migrations Django
+     docker compose -f prod.yml exec -T api python manage.py migrate --noinput
+     
+     # 6. Fichiers statiques Django
+     docker compose -f prod.yml exec -T api python manage.py collectstatic --noinput
+     
+     # 7. Nettoyage des vieilles images (> 7 jours)
+     docker image prune -af --filter "until=168h"
+     ```
+
+---
+
+## 7. Commandes utiles pour la maintenance sur la VM
 
 ```bash
-#!/usr/bin/env bash
-set -euo pipefail
-OWNER="$1"
-TAG_SHA="$2"
-APP_DIR="/home/deploy/app"
-COMPOSE_TEMPLATE="$APP_DIR/docker-compose.tpl.yml"
-COMPOSE_FILE="$APP_DIR/docker-compose.yml"
+cd /home/ubuntu/koda-infra
 
-cd "$APP_DIR"
-export IMAGE_api="ghcr.io/${OWNER}/api:${TAG_SHA}"
-export IMAGE_client="ghcr.io/${OWNER}/client:${TAG_SHA}"
-export IMAGE_worker="ghcr.io/${OWNER}/worker:${TAG_SHA}"
+# Vérifier l'état de tous les conteneurs
+docker compose -f prod.yml ps
 
-echo "$GHCR_PAT" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
-envsubst < "$COMPOSE_TEMPLATE" > "$COMPOSE_FILE"
-docker compose pull
-docker compose up -d --remove-orphans
+# Consulter les logs en temps réel
+docker compose -f prod.yml logs -f api
+docker compose -f prod.yml logs -f celeryworker
+
+# Relancer manuellement un service
+docker compose -f prod.yml restart api
+
+# Exécuter une commande Django ponctuelle
+docker compose -f prod.yml exec api python manage.py createsuperuser
 ```
-
----
-
-## Génération automatique du PDF (workflow `generate-pdf.yml`)
-
-Pour fournir le PDF demandé directement dans le dépôt, j'ajoute un workflow `generate-pdf.yml` qui :
-- est déclenchable manuellement (workflow_dispatch),
-- installe `pandoc` + `texlive-xetex` sur le runner,
-- convertit `docs/deploy-guide.md` en `docs/deploy-guide.pdf`,
-- commit & push `docs/deploy-guide.pdf` sur `main`.
-
-Tu pourras lancer cette conversion depuis l'onglet Actions > `Generate PDF from Markdown` > Run workflow.
-
----
-
-## Sécurité minimale & bonnes pratiques
-
-- Ne stocke PAS les secrets dans le repo ; utilise GitHub Secrets.
-- `GHCR_PAT_SERVER` doit avoir uniquement le scope `read:packages`.
-- Créé un utilisateur SSH dédié `deploy` et limite ses permissions (membre du groupe docker).
-- Sur la VM, restreins l'accès réseau (UFW) et garde le système à jour.
-
----
-
-## Prochaine étape
-
-1. Si tu veux que j'engage ces fichiers dans le repo (`docs/deploy-guide.md` + workflow de génération PDF),
-   je peux les ajouter directement sur la branche `main` (comme demandé). Ensuite, tu pourras lancer le
-   workflow manuellement pour générer `docs/deploy-guide.pdf`.
-
-2. Optionnel : je peux également générer/commiter le workflow `deploy.yml` (build/push/deploy) si tu veux
-   que je mette en place l'intégration complète.
-
----
-
-Fin du document.
