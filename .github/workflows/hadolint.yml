@@ -1,0 +1,37 @@
+name: Hadolint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  hadolint:
+    name: Lint Dockerfile (${{ matrix.name }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: prod-django
+            dockerfile: docker/prod/django/Dockerfile
+          - name: prod-client
+            dockerfile: docker/prod/client/Dockerfile
+          - name: local-django
+            dockerfile: docker/local/django/Dockerfile
+          - name: local-client
+            dockerfile: docker/local/client/Dockerfile
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Run Hadolint
+        uses: hadolint/hadolint-action@2332a7b74a6de0dda2e2221d575162eba76ba5e5 # v3.3.0
+        with:
+          dockerfile: ${{ matrix.dockerfile }}
+          failure-threshold: error
