@@ -1,85 +1,74 @@
-# Set the base Python version
-ARG PYTHON_VERSION=3.10.14-bullseye
-FROM python:${PYTHON_VERSION} AS python
+# Set the base Python version (slim-bookworm for a lightweight and secure image)
+ARG PYTHON_VERSION=3.12.2-slim-bookworm
+FROM docker.io/python:${PYTHON_VERSION} AS python
 
-# FIRST STAGE (BUILD STAGE)
+# Stage 1: Build dependency wheels
 FROM python AS python-build-stage
 
-# Set the build environment (prod by default)
 ARG BUILD_ENVIRONMENT=prod
 
-# Install dependencies for building Python packages
 RUN apt-get update && apt-get install --no-install-recommends -y \
     build-essential \
-    libpq-dev
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements files
 COPY ./backend/requirements /requirements
 
-# Install Python dependencies into wheels directory
-RUN pip wheel --wheel-dir /wheels -r /requirements/${BUILD_ENVIRONMENT}.txt
+RUN pip --default-timeout=100 wheel --wheel-dir /usr/src/app/wheels -r /requirements/${BUILD_ENVIRONMENT}.txt --retries 5
 
-# SECOND STAGE (RUN STAGE)
+# Stage 2: Python run stage
 FROM python AS python-run-stage
 
-# Set the build environment (prod by default)
 ARG BUILD_ENVIRONMENT=prod
-
-# Set the working directory for the application
 ARG APP_HOME=/app
 
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-ENV BUILD_ENV ${BUILD_ENVIRONMENT}
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV BUILD_ENV=${BUILD_ENVIRONMENT}
 
 WORKDIR ${APP_HOME}
 
-RUN addgroup --system django && \
-    adduser --system --ingroup django django && \
-    mkdir -p ${APP_HOME}/staticfiles/streamfield && \
-    chown -R django:django ${APP_HOME}/staticfiles && \
-    chmod -R 775 ${APP_HOME}/staticfiles
-
-# Install runtime dependencies
+# Install runtime dependencies (including GDAL for GIS/GeoPandas) and clean apt cache
 RUN apt-get update && apt-get install --no-install-recommends -y \
+    git \
     libpq-dev \
-    gettext netcat \
-    && apt-get purge -y --auto-remove -o APT:AutoRemove::RecommendsImportant=false \
+    gettext \
+    gdal-bin \
+    libgdal-dev \
+    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy the wheel files from the build stage to the current stage
-COPY --from=python-build-stage /wheels /wheels
+ENV GDAL_CONFIG=/usr/bin/gdal-config
+ENV CPLUS_INCLUDE_PATH=/usr/include/gdal
+ENV C_INCLUDE_PATH=/usr/include/gdal
 
-# Install the Python dependencies from the wheels directory
-RUN pip install --no-cache-dir --no-index --find-links=/wheels /wheels/*
+# Create django system user and group
+RUN addgroup --system django && \
+    adduser --system --ingroup django django
 
-# Copy entrypoint script and make it executable
+# Install Python dependencies from wheels and remove wheels layer
+COPY --from=python-build-stage /usr/src/app/wheels /wheels/
+RUN pip install --no-cache-dir --no-index --find-links=/wheels/ /wheels/* \
+    && rm -rf /wheels/
+
+# Copy entrypoint and start scripts
 COPY --chown=django:django ./docker/prod/django/entrypoint /entrypoint
-RUN sed -i 's/\r$//g' /entrypoint
-RUN chmod +x /entrypoint
-
-# Copy start script and make it executable
 COPY --chown=django:django ./docker/prod/django/start /start
-RUN sed -i 's/\r$//g' /start
-RUN chmod +x /start
-
 COPY --chown=django:django ./docker/prod/django/celery/worker/start /start-celeryworker
-RUN sed -i 's/\r$//g' /start-celeryworker
-RUN chmod +x /start-celeryworker
-
-COPY --chown=django:django ./docker/prod/django/celery/flower/start /start-flower
-RUN sed -i 's/\r$//g' /start-flower
-RUN chmod +x /start-flower
-
 # COPY --chown=django:django ./docker/prod/django/celery/beat/start /start-celerybeat
-# RUN sed -i 's/\r$//g' /start-celerybeat
-# RUN chmod +x /start-celerybeat
+COPY --chown=django:django ./docker/prod/django/celery/flower/start /start-flower
 
-# Copy the rest of the application code
+# Consolidate script permissions into a single RUN layer
+RUN sed -i 's/\r$//g' /entrypoint /start /start-celeryworker /start-flower \
+    && chmod +x /entrypoint /start /start-celeryworker /start-flower
+
+# Copy application code
 COPY --chown=django:django ./backend ${APP_HOME}
 
-RUN chown django:django ${APP_HOME}
+# Create static and media directories under django ownership
+RUN mkdir -p ${APP_HOME}/staticfiles ${APP_HOME}/media && \
+    chown -R django:django ${APP_HOME}/staticfiles ${APP_HOME}/media
 
 USER django
-# Set the entrypoint for the container
+
 ENTRYPOINT [ "/entrypoint" ]
