@@ -42,7 +42,7 @@ jobs:
 
       - name: Métadonnées image Backend
         id: meta-backend
-        uses: docker/metadata-action@8e5d50cd915cb4b08eb5047b3be5d8628b030b20 # v5.6.1
+        uses: docker/metadata-action@369eb591f429131d6889c46b94e711f089e6ca96 # v5.6.1
         with:
           images: ghcr.io/${{ github.repository_owner }}/koda-api
           tags: |
@@ -51,7 +51,7 @@ jobs:
 
       - name: Métadonnées image Frontend
         id: meta-frontend
-        uses: docker/metadata-action@8e5d50cd915cb4b08eb5047b3be5d8628b030b20 # v5.6.1
+        uses: docker/metadata-action@369eb591f429131d6889c46b94e711f089e6ca96 # v5.6.1
         with:
           images: ghcr.io/${{ github.repository_owner }}/koda-client
           tags: |
@@ -89,7 +89,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Copy prod.yml to VM
-        uses: appleboy/scp-action@7850239cfdcc58712e0e4708709f6e632ca4d88e # v0.1.7
+        uses: appleboy/scp-action@917f8b81dfc1ccd331fef9e2d61bdc6c8be94634 # v0.1.7
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
