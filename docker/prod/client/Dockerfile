@@ -39,8 +39,6 @@ COPY --from=deps /app/node_modules ./node_modules
 
 COPY ./client ${APP_HOME}
 
-COPY ./client/.env.prod .env.prod
-
 RUN npm run build
 
 # Stage 3: Create a production image. copy all the files and run next as a non root user
