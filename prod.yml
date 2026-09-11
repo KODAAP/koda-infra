@@ -3,8 +3,9 @@ services:
     build:
       context: .
       dockerfile: ./docker/prod/django/Dockerfile
-    image: koda_api
+    image: ghcr.io/kodaap/koda-api:${IMAGE_TAG:-latest}
     container_name: koda_api
+    restart: unless-stopped
     volumes:
       - static_volume:/app/staticfiles
       - media_volume:/app/media
@@ -20,11 +21,9 @@ services:
       - reverseProxy_nw
 
   postgres:
-    build:
-      context: .
-      dockerfile: ./docker/prod/postgres/Dockerfile
-    image: koda_postgres
+    image: postgres:16-bullseye
     container_name: koda_postgres
+    restart: unless-stopped
     volumes:
       - postgres_data:/var/lib/postgresql/data
     env_file:
@@ -37,7 +36,8 @@ services:
       context: .
       dockerfile: ./docker/prod/client/Dockerfile
     container_name: koda_client
-    image: koda_client
+    image: ghcr.io/kodaap/koda-client:${IMAGE_TAG:-latest}
+    restart: unless-stopped
     env_file:
       - "./client/.env.prod"
     networks:
@@ -47,6 +47,7 @@ services:
     image: redis:7.0-alpine3.19
     command: redis-server --appendonly yes
     container_name: koda_redis
+    restart: unless-stopped
     volumes:
       - redis_data:/data
     networks:
@@ -67,30 +68,16 @@ services:
 
   celeryworker:
     <<: *api
-    image: koda_celeryworker
     container_name: koda_celeryworker
     command: /start-celeryworker
 
- celerybeat:
-   image: koda_celerybeat
-   container_name: koda_celerybeat
-   build:
-     context: .
-     dockerfile: ./docker/prod/django/Dockerfile
-   command: /start-celerybeat
-   volumes:
-     - static_volume:/app/staticfiles
-   env_file:
-     - ./backend/.envs/.env.prod
-   depends_on:
-     - redis
-     - postgres
-   networks:
-     - reverseProxy_nw
+#  celerybeat:
+#    <<: *api
+#    container_name: koda_celerybeat
+#    command: /start-celerybeat
 
   flower:
     <<: *api
-    image: koda_flower
     container_name: koda_flower
     ports:
       - "5555:5555"

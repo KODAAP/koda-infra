@@ -1,20 +1,35 @@
+# ==========================================
+# Dockerignore - Koda
+# ==========================================
+
+# === Docker Configuration ===
+.dockerignore
+*.tar
+docker-compose*.override.yml
+docker-compose.local.yml 
+
 # === Git ===
-.git/
+.git
+**/.git
 .gitignore
 
 # === Python ===
 *.pyc
 *.pyo
-__pycache__/
-venv/
-.venv/
-*.egg-info/
-.pytest_cache/
+__pycache__
+**/__pycache__
+venv
+.venv
+*.egg-info
+**/
+.pytest_cache
+**/
 .coverage
-htmlcov/
+htmlcov
 
 # === Node.js / Next.js ===
 client/node_modules/
+**/node_modules/
 client/.next/
 client/.turbo/
 client/out/
@@ -22,14 +37,17 @@ client/.env*.local
 client/coverage/
 
 # === IDE ===
-.idea/
-.vscode/
+.idea
+**/.idea
+.vscode
+**/.vscode
 *.swp
 *.swo
 
 # === Logs ===
 *.log
 logs/
+**/logs/
 
 # === Django ===
 staticfiles/
@@ -42,21 +60,16 @@ backend/.envs/*
 .env.*
 !.env.example
 
-# === Docker ===
-*.tar
-docker-compose*.override.yml
-docker-compose.local.yml
-
 # === OS ===
 .DS_Store
 Thumbs.db
 
-# === Docs (optionnel) ===
+# === Documentation (optionnel) ===
 docs/
 *.md
 !README.md
 site/
 
-# === Agents / tooling ===
+# === Tooling & Agents ===
 .agents/
 .gemini/
