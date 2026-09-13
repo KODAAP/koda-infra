@@ -38,8 +38,7 @@ services:
     container_name: koda_client
     image: ghcr.io/kodaap/koda-client:${IMAGE_TAG:-latest}
     restart: unless-stopped
-    env_file:
-      - "./client/.env.prod"
+    # NEXT_PUBLIC_* sont baked dans le bundle au build — pas besoin d'env_file à runtime
     networks:
       - reverseProxy_nw
 
