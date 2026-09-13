@@ -34,12 +34,15 @@ FROM base AS builder
 ARG APP_HOME=/app
 WORKDIR ${APP_HOME}
 
+# Variables publiques Next.js baked dans le bundle au build
+ARG NEXT_PUBLIC_DOMAIN
+ENV NEXT_PUBLIC_DOMAIN=${NEXT_PUBLIC_DOMAIN}
 
 COPY --from=deps /app/node_modules ./node_modules
 
 COPY ./client ${APP_HOME}
 
-RUN npm run build
+RUN corepack enable pnpm && pnpm run build
 
 # Stage 3: Create a production image. copy all the files and run next as a non root user
 FROM base AS runner
