@@ -93,6 +93,7 @@ jobs:
     permissions:
       contents: read
       packages: read
+      actions: read          
       security-events: write
     strategy:
       fail-fast: false
@@ -137,6 +138,7 @@ jobs:
         with:
           sarif_file: dockle-results-${{ matrix.name }}.sarif
           category: dockle-${{ matrix.name }}
+          github-token: ${{ secrets.GH_PAT }}
 
   deploy:
     name: Deploy to VM via SSH
