@@ -128,7 +128,6 @@ jobs:
             goodwithtech/dockle:v0.4.15 \
             --exit-code 0 \
             --format sarif \
-            --no-extensions \
             -o /workspace/dockle-results-${{ matrix.name }}.sarif \
             "$IMAGE_NAME:$IMAGE_TAG"
 
