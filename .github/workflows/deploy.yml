@@ -104,6 +104,8 @@ jobs:
           - name: frontend
             image: ghcr.io/${{ github.repository_owner }}/koda-client
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
       - name: Log in to GHCR
         uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
         with:
