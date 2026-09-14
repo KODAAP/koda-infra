@@ -8,6 +8,8 @@ on:
 
 permissions:
   contents: read
+  security-events: write
+  actions: read
 
 jobs:
   dockle:
@@ -45,6 +47,7 @@ jobs:
             goodwithtech/dockle:v0.4.15 \
             --exit-code 0 \
             --format sarif \
+            --no-extensions \
             -o /workspace/dockle-results-${{ matrix.name }}.sarif \
             ${{ matrix.image }}:${{ github.sha }}
 
