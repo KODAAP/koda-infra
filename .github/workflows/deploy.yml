@@ -3,6 +3,10 @@ name: CD — Livraison Continue
 on:
   push:
     branches: [ main ]
+    paths-ignore:
+      - '.github/**'
+      - 'README.md'
+      - 'docs/**'
   # Permettre de relancer un build manuellement
   workflow_dispatch:
 
@@ -12,7 +16,7 @@ permissions:
 jobs:
   build-push-docker:
     name: Build & Push Docker Images
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
       packages: write
@@ -23,7 +27,6 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           submodules: recursive
-          # Un PAT avec accès en lecture aux 3 dépôts est nécessaire
           token: ${{ secrets.GH_PAT }}
 
       - name: Compute short SHA
@@ -82,9 +85,56 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+  # Scan de sécurité des images poussées
+  dockle-scan:
+    name: Dockle Scan (${{ matrix.name }})
+    needs: build-push-docker
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: read # Permission de lire sur le GHCR
+      security-events: write # Permission d'uploader le SARIF
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: backend
+            image: ghcr.io/${{ github.repository_owner }}/koda-api
+          - name: frontend
+            image: ghcr.io/${{ github.repository_owner }}/koda-client
+    steps:
+      - name: Log in to GHCR
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pull Docker image
+        run: docker pull ${{ matrix.image }}:${{ needs.build-push-docker.outputs.image_tag }}
+
+      - name: Run Dockle
+        run: |
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -v "${{ github.workspace }}:/workspace" \
+            goodwithtech/dockle:v0.4.15 \
+            --exit-code 0 \
+            --format sarif \
+            --no-extensions \
+            -o /workspace/dockle-results-${{ matrix.name }}.sarif \
+            ${{ matrix.image }}:${{ needs.build-push-docker.outputs.image_tag }}
+
+      - name: Upload SARIF
+        if: always()
+        uses: github/codeql-action/upload-sarif@6bb031afdd8eb862ea3fc1848194185e076637e5 # v3.28.11
+        with:
+          sarif_file: dockle-results-${{ matrix.name }}.sarif
+          category: dockle-${{ matrix.name }}
+
   deploy:
-    name: Deploy to OVH VM via SSH
-    runs-on: ubuntu-latest
+    name: Deploy to VM via SSH
+    runs-on: ubuntu-24.04
     needs: build-push-docker
     steps:
       - name: Checkout repository
