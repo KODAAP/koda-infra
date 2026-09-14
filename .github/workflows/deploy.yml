@@ -92,8 +92,8 @@ jobs:
     runs-on: ubuntu-24.04
     permissions:
       contents: read
-      packages: read # Permission de lire sur le GHCR
-      security-events: write # Permission d'uploader le SARIF
+      packages: read
+      security-events: write
     strategy:
       fail-fast: false
       matrix:
@@ -110,11 +110,18 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Pull Docker image
-        run: docker pull ${{ matrix.image }}:${{ needs.build-push-docker.outputs.image_tag }}
-
-      - name: Run Dockle
+      - name: Pull and Scan Docker image
         run: |
+          # 1. Forcer le nom de l'image en minuscules
+          IMAGE_NAME=$(echo "${{ matrix.image }}" | tr '[:upper:]' '[:lower:]')
+          IMAGE_TAG="${{ needs.build-push-docker.outputs.image_tag }}"
+          
+          # 2. Pull de l'image
+          echo "Pulling $IMAGE_NAME:$IMAGE_TAG"
+          docker pull "$IMAGE_NAME:$IMAGE_TAG"
+          
+          # 3. Run Dockle
+          echo "Running Dockle..."
           docker run --rm \
             -v /var/run/docker.sock:/var/run/docker.sock \
             -v "${{ github.workspace }}:/workspace" \
@@ -123,10 +130,10 @@ jobs:
             --format sarif \
             --no-extensions \
             -o /workspace/dockle-results-${{ matrix.name }}.sarif \
-            ${{ matrix.image }}:${{ needs.build-push-docker.outputs.image_tag }}
+            "$IMAGE_NAME:$IMAGE_TAG"
 
       - name: Upload SARIF
-        if: always()
+        if: always() && hashFiles('dockle-results-${{ matrix.name }}.sarif') != ''
         uses: github/codeql-action/upload-sarif@6bb031afdd8eb862ea3fc1848194185e076637e5 # v3.28.11
         with:
           sarif_file: dockle-results-${{ matrix.name }}.sarif
