@@ -21,6 +21,9 @@ services:
     command: /start
     networks:
       - koda_network
+    labels:
+      project: "koda"
+      service: "api"
 
   postgres:
     build:
@@ -36,6 +39,9 @@ services:
       - ./backend/.envs/.env.local
     networks:
       - koda_network
+    labels:
+      project: "koda"
+      service: "postgres"
 
   mailpit:
     image: docker.io/axllent/mailpit:v1.15
@@ -52,6 +58,9 @@ services:
       MP_SMTP_AUTH_ALLOW_INSECURE: 1
     networks:
       - koda_network
+    labels:
+      project: "koda"
+      service: "mailpit"
 
   client:
     build:
@@ -74,6 +83,9 @@ services:
     restart: unless-stopped
     networks:
       - koda_network
+    labels:
+      project: "koda"
+      service: "client"
 
 # enketo: (service désactivé)
 #   image: ghcr.io/enketo/enketo:7.6.1
@@ -103,12 +115,18 @@ services:
       retries: 5
     networks:
       - koda_network
+    labels:
+      project: "koda"
+      service: "redis"
 
   celeryworker:
     <<: *api
     image: koda_celeryworker
     container_name: koda_celeryworker
     command: /start-celeryworker
+    labels:
+      project: "koda"
+      service: "celeryworker"
 
 #  celerybeat:
 #    <<: *api
@@ -123,6 +141,9 @@ services:
     ports:
       - "5555:5555"
     command: /start-flower
+    labels:
+      project: "koda"
+      service: "flower"
 
   nginx:
     build:
@@ -147,6 +168,9 @@ services:
       - docs
     networks:
       - koda_network
+    labels:
+      project: "koda"
+      service: "nginx"
 
   docs:
     image: koda_api
@@ -163,6 +187,9 @@ services:
       - postgres
     networks:
       - koda_network
+    labels:
+      project: "koda"
+      service: "docs"
 
 volumes:
   postgres_data: {}
