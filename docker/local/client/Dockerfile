@@ -2,7 +2,7 @@
 FROM node:20-alpine AS base
 
 # Active corepack pour gérer pnpm proprement
-RUN corepack enable && corepack prepare pnpm@10.15.1 --activate
+RUN corepack enable && corepack prepare pnpm@10.28.0 --activate
 
 # Ajoute compatibilité souvent nécessaire
 RUN apk add --no-cache libc6-compat
