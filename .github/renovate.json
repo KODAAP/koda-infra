@@ -1,0 +1,67 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "docker-compose": {
+    "fileMatch": [
+      "(^|/)local\\.ya?ml$",
+      "(^|/)prod\\.ya?ml$",
+      "(^|/)docker-compose[^/]*\\.ya?ml$"
+    ]
+  },
+  "dockerfile": {
+    "fileMatch": [
+      "(^|/)Dockerfile[^/]*$",
+      "(^|/)docker/.+/Dockerfile$"
+    ]
+  },
+  "ignorePaths": [
+    "**/node_modules/**",
+    "backend/**",
+    "client/**"
+  ],
+  "packageRules": [
+    {
+      "description": "Ignorer les images personnalisées du dépôt (koda-api, koda-client, etc.)",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": [
+        "ghcr.io/kodaap/**",
+        "koda_api",
+        "koda_client",
+        "koda_postgres",
+        "koda_nginx"
+      ],
+      "enabled": false
+    },
+    {
+      "description": "Ne pas ouvrir de PR pour les simples mises à jour de digest (sans changement de version)",
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["digest"],
+      "enabled": false
+    },
+    {
+      "description": "Ne pas ouvrir de PR dédiée uniquement au pinning proactif",
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["pin"],
+      "enabled": false
+    },
+    {
+      "description": "Pinner automatiquement le digest SHA256 uniquement lors des montées de version Docker",
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["major", "minor", "patch"],
+      "pinDigests": true
+    },
+    {
+      "description": "Mises à jour des actions GitHub avec pinning SHA et mise à jour des commentaires de version",
+      "matchManagers": ["github-actions"],
+      "pinDigests": true
+    },
+    {
+      "description": "Grouper les montées de version des images Docker de base",
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "Docker base images (minor/patch)"
+    }
+  ]
+}
