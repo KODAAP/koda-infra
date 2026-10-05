@@ -24,7 +24,7 @@ jobs:
       image_tag: ${{ steps.vars.outputs.sha_short }}
     steps:
       - name: Checkout koda-infra avec submodules
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: recursive
           token: ${{ secrets.GH_PAT }}
@@ -105,7 +105,7 @@ jobs:
             image: ghcr.io/${{ github.repository_owner }}/koda-client
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Log in to GHCR
         uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
         with:
@@ -142,58 +142,58 @@ jobs:
           path: dockle-results-${{ matrix.name }}.sarif
           retention-days: 14 # Garde le fichier pendant 14 jours
 
-  deploy:
-    name: Deploy to VM via SSH
-    runs-on: ubuntu-24.04
-    needs: build-push-docker
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-
-      - name: Copy prod.yml to VM
-        uses: appleboy/scp-action@917f8b81dfc1ccd331fef9e2d61bdc6c8be94634 # v0.1.7
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          port: ${{ secrets.SSH_PORT || 22 }}
-          key: ${{ secrets.SSH_KEY }}
-          source: "prod.yml"
-          target: ${{ secrets.DEPLOY_PATH || '/home/ubuntu/koda-infra' }}
-
-      - name: Execute deployment commands via SSH
-        uses: appleboy/ssh-action@7eaf76671a0d7eec5d98ee897acda4f968735a17 # v1.2.0
-        env:
-          GHCR_PULL_TOKEN: ${{ secrets.GHCR_PULL_TOKEN }}
-          GITHUB_ACTOR: ${{ github.actor }}
-          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH || '/home/ubuntu/koda-infra' }}
-          IMAGE_TAG: ${{ needs.build-push-docker.outputs.image_tag }}
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          port: ${{ secrets.SSH_PORT || 22 }}
-          key: ${{ secrets.SSH_KEY }}
-          envs: GHCR_PULL_TOKEN,GITHUB_ACTOR,DEPLOY_PATH,IMAGE_TAG
-          script: |
-            set -e
-            cd "$DEPLOY_PATH"
-
-            # 1. Login sur GHCR
-            echo "$GHCR_PULL_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
-
-            # 2. Exporter le tag d'image pour docker compose
-            export IMAGE_TAG="$IMAGE_TAG"
-
-            # 3. Pull des nouvelles images
-            docker compose -f prod.yml pull
-
-            # 4. Redemarrage avec nouvelles images
-            docker compose -f prod.yml up -d --remove-orphans
-
-            # 5. Migrations de base de donnees Django
-            docker compose -f prod.yml exec -T api python manage.py migrate --noinput
-
-            # 6. Collecte des fichiers statiques
-            docker compose -f prod.yml exec -T api python manage.py collectstatic --noinput
-
-            # 7. Nettoyage des anciennes images inutilisees
-            docker image prune -af --filter "until=168h"
+  # deploy:
+  #   name: Deploy to VM via SSH
+  #   runs-on: ubuntu-24.04
+  #   needs: build-push-docker
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+  #
+  #     - name: Copy prod.yml to VM
+  #       uses: appleboy/scp-action@917f8b81dfc1ccd331fef9e2d61bdc6c8be94634 # v0.1.7
+  #       with:
+  #         host: ${{ secrets.SSH_HOST }}
+  #         username: ${{ secrets.SSH_USER }}
+  #         port: ${{ secrets.SSH_PORT || 22 }}
+  #         key: ${{ secrets.SSH_KEY }}
+  #         source: "prod.yml"
+  #         target: ${{ secrets.DEPLOY_PATH || '/home/ubuntu/koda-infra' }}
+  #
+  #     - name: Execute deployment commands via SSH
+  #       uses: appleboy/ssh-action@7eaf76671a0d7eec5d98ee897acda4f968735a17 # v1.2.0
+  #       env:
+  #         GHCR_PULL_TOKEN: ${{ secrets.GHCR_PULL_TOKEN }}
+  #         GITHUB_ACTOR: ${{ github.actor }}
+  #         DEPLOY_PATH: ${{ secrets.DEPLOY_PATH || '/home/ubuntu/koda-infra' }}
+  #         IMAGE_TAG: ${{ needs.build-push-docker.outputs.image_tag }}
+  #       with:
+  #         host: ${{ secrets.SSH_HOST }}
+  #         username: ${{ secrets.SSH_USER }}
+  #         port: ${{ secrets.SSH_PORT || 22 }}
+  #         key: ${{ secrets.SSH_KEY }}
+  #         envs: GHCR_PULL_TOKEN,GITHUB_ACTOR,DEPLOY_PATH,IMAGE_TAG
+  #         script: |
+  #           set -e
+  #           cd "$DEPLOY_PATH"
+  #
+  #           # 1. Login sur GHCR
+  #           echo "$GHCR_PULL_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+  #
+  #           # 2. Exporter le tag d'image pour docker compose
+  #           export IMAGE_TAG="$IMAGE_TAG"
+  #
+  #           # 3. Pull des nouvelles images
+  #           docker compose -f prod.yml pull
+  #
+  #           # 4. Redemarrage avec nouvelles images
+  #           docker compose -f prod.yml up -d --remove-orphans
+  #
+  #           # 5. Migrations de base de donnees Django
+  #           docker compose -f prod.yml exec -T api python manage.py migrate --noinput
+  #
+  #           # 6. Collecte des fichiers statiques
+  #           docker compose -f prod.yml exec -T api python manage.py collectstatic --noinput
+  #
+  #           # 7. Nettoyage des anciennes images inutilisees
+  #           docker image prune -af --filter "until=168h"
