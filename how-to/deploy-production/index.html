@@ -12,7 +12,7 @@
         <meta name="author" content="Ekue">
       
       
-        <link rel="canonical" href="https://sycosur.insuco.net/docs/how-to/deploy-production/">
+        <link rel="canonical" href="https://app.kodaap.net/docs/how-to/deploy-production/">
       
       
         <link rel="prev" href="../../tutorials/first-export/">
@@ -1660,21 +1660,21 @@
 <h2 id="prerequis">Prérequis<a class="headerlink" href="#prerequis" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Serveur Linux avec Docker et Docker Compose installés</li>
-<li>Nom de domaine pointant vers le serveur (ex. <code>koda.insuco.net</code>)</li>
+<li>Nom de domaine pointant vers le serveur (ex. <code>koda.kodaap.net</code>)</li>
 <li>Certificat SSL (Let's Encrypt recommandé)</li>
 <li>Accès SSH au serveur</li>
 <li>Instance ODK Central accessible depuis le serveur</li>
 </ul>
 <hr />
 <h2 id="etape-1-cloner-le-depot-sur-le-serveur">Étape 1 — Cloner le dépôt sur le serveur<a class="headerlink" href="#etape-1-cloner-le-depot-sur-le-serveur" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/insuco/koda.git<span class="w"> </span>/opt/koda
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/kodaap/koda.git<span class="w"> </span>/opt/koda
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">cd</span><span class="w"> </span>/opt/koda
 </code></pre></div>
 <hr />
 <h2 id="etape-2-configurer-les-variables-denvironnement">Étape 2 — Configurer les variables d'environnement<a class="headerlink" href="#etape-2-configurer-les-variables-denvironnement" title="Permanent link">&para;</a></h2>
 <h3 id="fichier-racine-env">Fichier racine <code>.env</code><a class="headerlink" href="#fichier-racine-env" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>COMPOSE_BAKE=true
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>DOMAIN=koda.insuco.net
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>DOMAIN=koda.kodaap.net
 </code></pre></div>
 <h3 id="fichier-backendenvsenvproduction">Fichier <code>backend/.envs/.env.production</code><a class="headerlink" href="#fichier-backendenvsenvproduction" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a># Django
@@ -1682,12 +1682,12 @@
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>DJANGO_SECRET_KEY="CHANGEZ-MOI-clé-très-longue-et-aléatoire"
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>DJANGO_ADMIN_URL="votre-url-admin-secrète/"
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>DJANGO_SETTINGS_MODULE=config.settings.production
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>DOMAIN=koda.insuco.net
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>DOMAIN=koda.kodaap.net
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a># Email
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>EMAIL_PORT=587
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>EMAIL_HOST=smtp.votre-fournisseur.com
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>DEFAULT_FROM_EMAIL="support-koda@insuco.com"
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>DEFAULT_FROM_EMAIL="support-koda@kodaap.com"
 <a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
 <a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a># Base de données
 <a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>POSTGRES_HOST=postgres
@@ -1709,18 +1709,18 @@
 <a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a># Google OAuth
 <a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>GOOGLE_CLIENT_ID="votre-client-id.apps.googleusercontent.com"
 <a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>GOOGLE_CLIENT_SECRET="votre-secret"
-<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>REDIRECT_URIS="https://koda.insuco.net/api/v1/auth/google"
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>REDIRECT_URIS="https://koda.kodaap.net/api/v1/auth/google"
 <a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>
 <a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a># ODK Central
-<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>ODK_CENTRAL_URL=https://odk.insuco.net/v1
-<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>ODK_ADMIN_EMAIL=admin@insuco.com
+<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>ODK_CENTRAL_URL=https://odk.kodaap.net/v1
+<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>ODK_ADMIN_EMAIL=admin@kodaap.com
 <a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>ODK_ADMIN_PASSWORD=MOT-DE-PASSE-ODK
 <a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a>ODK_VERIFY_SSL=True
 <a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a>
 <a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a># Enketo
 <a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a>ENKETO_API_URL=http://enketo:8005/-/api/v2
 <a id="__codelineno-2-43" name="__codelineno-2-43" href="#__codelineno-2-43"></a>ENKETO_API_KEY=votre-clé-enketo-longue
-<a id="__codelineno-2-44" name="__codelineno-2-44" href="#__codelineno-2-44"></a>ENKETO_PUBLIC_BASE_URL=https://koda.insuco.net
+<a id="__codelineno-2-44" name="__codelineno-2-44" href="#__codelineno-2-44"></a>ENKETO_PUBLIC_BASE_URL=https://koda.kodaap.net
 <a id="__codelineno-2-45" name="__codelineno-2-45" href="#__codelineno-2-45"></a>
 <a id="__codelineno-2-46" name="__codelineno-2-46" href="#__codelineno-2-46"></a># Google Drive (exports)
 <a id="__codelineno-2-47" name="__codelineno-2-47" href="#__codelineno-2-47"></a>GOOGLE_DRIVE_FOLDER_ID=votre-folder-id
@@ -1744,16 +1744,16 @@
 <p>Si vous utilisez un Nginx hôte (en dehors de Docker) pour gérer le SSL :</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">server</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">    </span><span class="kn">listen</span><span class="w"> </span><span class="mi">80</span><span class="p">;</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span><span class="kn">server_name</span><span class="w"> </span><span class="s">koda.insuco.net</span><span class="p">;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span><span class="kn">server_name</span><span class="w"> </span><span class="s">koda.kodaap.net</span><span class="p">;</span>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="kn">return</span><span class="w"> </span><span class="mi">301</span><span class="w"> </span><span class="s">https://</span><span class="nv">$host$request_uri</span><span class="p">;</span>
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="p">}</span>
 <a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
 <a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="k">server</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span><span class="kn">listen</span><span class="w"> </span><span class="mi">443</span><span class="w"> </span><span class="s">ssl</span><span class="p">;</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">    </span><span class="kn">server_name</span><span class="w"> </span><span class="s">koda.insuco.net</span><span class="p">;</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">    </span><span class="kn">server_name</span><span class="w"> </span><span class="s">koda.kodaap.net</span><span class="p">;</span>
 <a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">    </span><span class="kn">ssl_certificate</span><span class="w"> </span><span class="s">/etc/letsencrypt/live/koda.insuco.net/fullchain.pem</span><span class="p">;</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">    </span><span class="kn">ssl_certificate_key</span><span class="w"> </span><span class="s">/etc/letsencrypt/live/koda.insuco.net/privkey.pem</span><span class="p">;</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">    </span><span class="kn">ssl_certificate</span><span class="w"> </span><span class="s">/etc/letsencrypt/live/koda.kodaap.net/fullchain.pem</span><span class="p">;</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">    </span><span class="kn">ssl_certificate_key</span><span class="w"> </span><span class="s">/etc/letsencrypt/live/koda.kodaap.net/privkey.pem</span><span class="p">;</span>
 <a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
 <a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">    </span><span class="kn">location</span><span class="w"> </span><span class="s">/</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">        </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">http://127.0.0.1:8080</span><span class="p">;</span>
@@ -1773,7 +1773,7 @@
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>prod.yml<span class="w"> </span>ps
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
 <a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Santé de l'API</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>curl<span class="w"> </span>-f<span class="w"> </span>https://koda.insuco.net/api/v1/health/<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"KO"</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>curl<span class="w"> </span>-f<span class="w"> </span>https://koda.kodaap.net/api/v1/health/<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"KO"</span>
 <a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
 <a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Logs en temps réel</span>
 <a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>prod.yml<span class="w"> </span>logs<span class="w"> </span>-f<span class="w"> </span>api<span class="w"> </span>celeryworker

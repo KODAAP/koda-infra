@@ -1,87 +1,87 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-         <loc>https://sycosur.insuco.net/docs/</loc>
-         <lastmod>2026-09-11</lastmod>
+         <loc>https://app.kodaap.net/docs/</loc>
+         <lastmod>2026-10-06</lastmod>
     </url>
     <url>
-         <loc>https://sycosur.insuco.net/docs/deploy-guide/</loc>
-         <lastmod>2026-09-11</lastmod>
+         <loc>https://app.kodaap.net/docs/deploy-guide/</loc>
+         <lastmod>2026-10-06</lastmod>
     </url>
     <url>
-         <loc>https://sycosur.insuco.net/docs/explanation/async-exports/</loc>
-         <lastmod>2026-09-11</lastmod>
+         <loc>https://app.kodaap.net/docs/explanation/async-exports/</loc>
+         <lastmod>2026-10-06</lastmod>
     </url>
     <url>
-         <loc>https://sycosur.insuco.net/docs/explanation/ci-cd/</loc>
-         <lastmod>2026-09-11</lastmod>
+         <loc>https://app.kodaap.net/docs/explanation/ci-cd/</loc>
+         <lastmod>2026-10-06</lastmod>
     </url>
     <url>
-         <loc>https://sycosur.insuco.net/docs/explanation/gis-strategy/</loc>
-         <lastmod>2026-09-11</lastmod>
+         <loc>https://app.kodaap.net/docs/explanation/gis-strategy/</loc>
+         <lastmod>2026-10-06</lastmod>
     </url>
     <url>
-         <loc>https://sycosur.insuco.net/docs/explanation/odk-integration/</loc>
-         <lastmod>2026-09-11</lastmod>
+         <loc>https://app.kodaap.net/docs/explanation/odk-integration/</loc>
+         <lastmod>2026-10-06</lastmod>
     </url>
     <url>
-         <loc>https://sycosur.insuco.net/docs/explanation/roles-permissions/</loc>
-         <lastmod>2026-09-11</lastmod>
+         <loc>https://app.kodaap.net/docs/explanation/roles-permissions/</loc>
+         <lastmod>2026-10-06</lastmod>
     </url>
     <url>
-         <loc>https://sycosur.insuco.net/docs/how-to/configure-enketo/</loc>
-         <lastmod>2026-09-11</lastmod>
+         <loc>https://app.kodaap.net/docs/how-to/configure-enketo/</loc>
+         <lastmod>2026-10-06</lastmod>
     </url>
     <url>
-         <loc>https://sycosur.insuco.net/docs/how-to/deploy-production/</loc>
-         <lastmod>2026-09-11</lastmod>
+         <loc>https://app.kodaap.net/docs/how-to/deploy-production/</loc>
+         <lastmod>2026-10-06</lastmod>
     </url>
     <url>
-         <loc>https://sycosur.insuco.net/docs/how-to/export-data/</loc>
-         <lastmod>2026-09-11</lastmod>
+         <loc>https://app.kodaap.net/docs/how-to/export-data/</loc>
+         <lastmod>2026-10-06</lastmod>
     </url>
     <url>
-         <loc>https://sycosur.insuco.net/docs/how-to/manage-permissions/</loc>
-         <lastmod>2026-09-11</lastmod>
+         <loc>https://app.kodaap.net/docs/how-to/manage-permissions/</loc>
+         <lastmod>2026-10-06</lastmod>
     </url>
     <url>
-         <loc>https://sycosur.insuco.net/docs/how-to/manage-users/</loc>
-         <lastmod>2026-09-11</lastmod>
+         <loc>https://app.kodaap.net/docs/how-to/manage-users/</loc>
+         <lastmod>2026-10-06</lastmod>
     </url>
     <url>
-         <loc>https://sycosur.insuco.net/docs/reference/api/</loc>
-         <lastmod>2026-09-11</lastmod>
+         <loc>https://app.kodaap.net/docs/reference/api/</loc>
+         <lastmod>2026-10-06</lastmod>
     </url>
     <url>
-         <loc>https://sycosur.insuco.net/docs/reference/architecture/</loc>
-         <lastmod>2026-09-11</lastmod>
+         <loc>https://app.kodaap.net/docs/reference/architecture/</loc>
+         <lastmod>2026-10-06</lastmod>
     </url>
     <url>
-         <loc>https://sycosur.insuco.net/docs/reference/environment-variables/</loc>
-         <lastmod>2026-09-11</lastmod>
+         <loc>https://app.kodaap.net/docs/reference/environment-variables/</loc>
+         <lastmod>2026-10-06</lastmod>
     </url>
     <url>
-         <loc>https://sycosur.insuco.net/docs/reference/changelog/V2026.03/</loc>
-         <lastmod>2026-09-11</lastmod>
+         <loc>https://app.kodaap.net/docs/reference/changelog/V2026.03/</loc>
+         <lastmod>2026-10-06</lastmod>
     </url>
     <url>
-         <loc>https://sycosur.insuco.net/docs/reference/changelog/V2026.04/</loc>
-         <lastmod>2026-09-11</lastmod>
+         <loc>https://app.kodaap.net/docs/reference/changelog/V2026.04/</loc>
+         <lastmod>2026-10-06</lastmod>
     </url>
     <url>
-         <loc>https://sycosur.insuco.net/docs/reference/changelog/V2026.05/</loc>
-         <lastmod>2026-09-11</lastmod>
+         <loc>https://app.kodaap.net/docs/reference/changelog/V2026.05/</loc>
+         <lastmod>2026-10-06</lastmod>
     </url>
     <url>
-         <loc>https://sycosur.insuco.net/docs/tutorials/first-export/</loc>
-         <lastmod>2026-09-11</lastmod>
+         <loc>https://app.kodaap.net/docs/tutorials/first-export/</loc>
+         <lastmod>2026-10-06</lastmod>
     </url>
     <url>
-         <loc>https://sycosur.insuco.net/docs/tutorials/first-survey/</loc>
-         <lastmod>2026-09-11</lastmod>
+         <loc>https://app.kodaap.net/docs/tutorials/first-survey/</loc>
+         <lastmod>2026-10-06</lastmod>
     </url>
     <url>
-         <loc>https://sycosur.insuco.net/docs/tutorials/getting-started/</loc>
-         <lastmod>2026-09-11</lastmod>
+         <loc>https://app.kodaap.net/docs/tutorials/getting-started/</loc>
+         <lastmod>2026-10-06</lastmod>
     </url>
 </urlset>
