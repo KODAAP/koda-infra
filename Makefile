@@ -57,6 +57,10 @@ staging:
 prod:
 	$(MAKE) COMPOSE_FILE=prod.yml up
 
+lint-workflows:
+	@bash scripts/validate-workflows.sh
+
+
 # Afficher l'aide
 help:
 	@echo "Usage:"
