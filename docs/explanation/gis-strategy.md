@@ -2,7 +2,7 @@
 
 ## Contexte
 
-Les enquêtes ODK collectées via Koda contiennent fréquemment des données géographiques : coordonnées GPS des ménages enquêtés, tracés de routes, délimitations de zones. Ces données ont une valeur analytique importante pour les projets Insuco (études d'impact, cartographie sociale, suivi terrain).
+Les enquêtes ODK collectées via Koda contiennent fréquemment des données géographiques : coordonnées GPS des ménages enquêtés, tracés de routes, délimitations de zones. Ces données ont une valeur analytique importante pour les projets Kodaap (études d'impact, cartographie sociale, suivi terrain).
 
 Koda intègre une **chaîne de traitement SIG complète** pour transformer les soumissions ODK en données géographiques exploitables.
 

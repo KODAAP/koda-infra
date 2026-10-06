@@ -40,9 +40,9 @@ graph LR
 Koda utilise un **pool de comptes administrateurs ODK Central** pour effectuer toutes les opérations API. Ces comptes sont configurés via :
 
 ```env
-ODK_ADMIN_EMAIL=admin@insuco.com
+ODK_ADMIN_EMAIL=admin@kodaap.com
 ODK_ADMIN_PASSWORD=...
-ODK_ADMIN_EMAIL2=admin2@insuco.com   # optionnel, pour la redondance
+ODK_ADMIN_EMAIL2=admin2@kodaap.com   # optionnel, pour la redondance
 ODK_ADMIN_PASSWORD2=...
 ```
 

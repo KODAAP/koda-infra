@@ -4,7 +4,7 @@
 
 Koda adopte un modèle de permissions **hiérarchique et contextuel** : les droits d'un utilisateur dépendent à la fois de son rôle global sur la plateforme et de son rôle dans chaque projet.
 
-Ce modèle répond aux besoins terrain d'Insuco :
+Ce modèle répond aux besoins terrain de Kodaap :
 - Des **administrateurs** qui gèrent la plateforme globalement
 - Des **chefs de projet** qui pilotent leurs enquêtes de manière autonome
 - Des **enquêteurs/analystes** qui consultent et exportent les données de leurs projets
@@ -99,7 +99,7 @@ Cette synchronisation est transparente pour l'utilisateur final.
 |---|---|---|
 | Invitation envoyée | Email avec lien d'activation | Utilisateur invité |
 | Invitation expirée | Alerte dans la liste des invitations | Administrateur |
-| Révocation d'un email `@insuco.com` | Email de notification | Tous les administrateurs |
+| Révocation d'un email `@kodaap.com` | Email de notification | Tous les administrateurs |
 | Suppression d'un utilisateur externe | Email de notification | Tous les administrateurs |
 | Projet sans PM actif | Bandeau d'alerte dans l'interface | Administrateurs |
 | Projet archivé | Indicateur visuel sur la carte projet | Tous les membres |

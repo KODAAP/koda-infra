@@ -43,7 +43,7 @@ En production, Enketo doit être accessible via le domaine public pour que les e
 ```env
 ENKETO_API_URL=http://enketo:8005/-/api/v2
 ENKETO_API_KEY=clé-longue-et-aléatoire
-ENKETO_PUBLIC_BASE_URL=https://koda.insuco.net
+ENKETO_PUBLIC_BASE_URL=https://koda.kodaap.net
 ```
 
 !!! warning "ENKETO_PUBLIC_BASE_URL"

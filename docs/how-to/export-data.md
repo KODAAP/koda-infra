@@ -108,7 +108,7 @@ En cas de problème, consultez Flower pour diagnostiquer :
 
 ```
 http://localhost:5555  (dev)
-https://koda.insuco.net/flower  (prod)
+https://koda.kodaap.net/flower  (prod)
 ```
 
 Filtrez les tâches par nom `export_` pour voir uniquement les tâches d'export.

@@ -80,8 +80,8 @@ Pour les utilisateurs qui ont besoin d'accéder à la plateforme sans être ratt
 2. Cliquez sur le menu contextuel de l'utilisateur
 3. Sélectionnez **Révoquer l'accès plateforme**
 
-!!! danger "Révocation des emails Insuco"
-    Si un email `@insuco.com` est révoqué, les administrateurs reçoivent une notification automatique. Cette action est irréversible sans réinvitation.
+!!! danger "Révocation des emails Kodaap"
+    Si un email `@kodaap.com` est révoqué, les administrateurs reçoivent une notification automatique. Cette action est irréversible sans réinvitation.
 
 ---
 

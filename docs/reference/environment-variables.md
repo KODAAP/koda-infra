@@ -18,7 +18,7 @@ Toutes les variables de configuration de Koda sont définies dans `backend/.envs
 | `DOMAIN` | ✅ | `localhost:8080` | Domaine public de l'application |
 | `COOKIE_SECURE` | ✅ prod | `True` | Active les cookies sécurisés (HTTPS uniquement) |
 | `SIGNING_KEY` | ✅ | `"clé-signing"` | Clé de signature JWT |
-| `ADMIN_PASSWORD` | ❌ | `admin123` | Mot de passe du superuser créé automatiquement |
+| `ADMIN_PASSWORD` | ❌ | `` | Mot de passe du superuser créé automatiquement |
 
 ---
 
@@ -40,7 +40,7 @@ Toutes les variables de configuration de Koda sont définies dans `backend/.envs
 |---|:---:|---|---|
 | `EMAIL_HOST` | ✅ | `mailpit` (dev) / `smtp.gmail.com` (prod) | Serveur SMTP |
 | `EMAIL_PORT` | ✅ | `1025` (dev) / `587` (prod) | Port SMTP |
-| `DEFAULT_FROM_EMAIL` | ✅ | `support-koda@insuco.com` | Adresse expéditeur par défaut |
+| `DEFAULT_FROM_EMAIL` | ✅ | `support-koda@kodaap.com` | Adresse expéditeur par défaut |
 
 ---
 
@@ -59,10 +59,10 @@ Toutes les variables de configuration de Koda sont définies dans `backend/.envs
 
 | Variable | Obligatoire | Exemple | Description |
 |---|:---:|---|---|
-| `ODK_CENTRAL_URL` | ✅ | `https://test-odk.insuco.net/v1` | URL de base de l'API ODK Central |
-| `ODK_ADMIN_EMAIL` | ✅ | `admin@insuco.com` | Email du compte admin ODK (pool 1) |
+| `ODK_CENTRAL_URL` | ✅ | `https://test-odk.kodaap.net/v1` | URL de base de l'API ODK Central |
+| `ODK_ADMIN_EMAIL` | ✅ | `admin@kodaap.com` | Email du compte admin ODK (pool 1) |
 | `ODK_ADMIN_PASSWORD` | ✅ | `mot-de-passe` | Mot de passe admin ODK (pool 1) |
-| `ODK_ADMIN_EMAIL2` | ❌ | `admin2@insuco.com` | Email du compte admin ODK (pool 2) |
+| `ODK_ADMIN_EMAIL2` | ❌ | `admin2@kodaap.com` | Email du compte admin ODK (pool 2) |
 | `ODK_ADMIN_PASSWORD2` | ❌ | `mot-de-passe` | Mot de passe admin ODK (pool 2) |
 | `ODK_VERIFY_SSL` | ✅ | `False` (dev) / `True` (prod) | Vérification du certificat SSL ODK |
 
@@ -105,7 +105,7 @@ Le fichier `.env` à la racine du projet contient uniquement deux variables util
 
 ```env
 COMPOSE_BAKE=true
-DOMAIN=koda.insuco.net
+DOMAIN=koda.kodaap.net
 ```
 
 | Variable | Description |

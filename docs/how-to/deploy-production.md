@@ -5,7 +5,7 @@ Ce guide décrit le déploiement de Koda sur un serveur de production avec Docke
 ## Prérequis
 
 - Serveur Linux avec Docker et Docker Compose installés
-- Nom de domaine pointant vers le serveur (ex. `koda.insuco.net`)
+- Nom de domaine pointant vers le serveur (ex. `koda.kodaap.net`)
 - Certificat SSL (Let's Encrypt recommandé)
 - Accès SSH au serveur
 - Instance ODK Central accessible depuis le serveur
@@ -15,7 +15,7 @@ Ce guide décrit le déploiement de Koda sur un serveur de production avec Docke
 ## Étape 1 — Cloner le dépôt sur le serveur
 
 ```bash
-git clone https://github.com/insuco/koda.git /opt/koda
+git clone https://github.com/kodaap/koda.git /opt/koda
 cd /opt/koda
 ```
 
@@ -27,7 +27,7 @@ cd /opt/koda
 
 ```env
 COMPOSE_BAKE=true
-DOMAIN=koda.insuco.net
+DOMAIN=koda.kodaap.net
 ```
 
 ### Fichier `backend/.envs/.env.production`
@@ -38,12 +38,12 @@ SITE_NAME="Koda"
 DJANGO_SECRET_KEY="CHANGEZ-MOI-clé-très-longue-et-aléatoire"
 DJANGO_ADMIN_URL="votre-url-admin-secrète/"
 DJANGO_SETTINGS_MODULE=config.settings.production
-DOMAIN=koda.insuco.net
+DOMAIN=koda.kodaap.net
 
 # Email
 EMAIL_PORT=587
 EMAIL_HOST=smtp.votre-fournisseur.com
-DEFAULT_FROM_EMAIL="support-koda@insuco.com"
+DEFAULT_FROM_EMAIL="support-koda@kodaap.com"
 
 # Base de données
 POSTGRES_HOST=postgres
@@ -65,18 +65,18 @@ SIGNING_KEY="CHANGEZ-MOI-clé-signing"
 # Google OAuth
 GOOGLE_CLIENT_ID="votre-client-id.apps.googleusercontent.com"
 GOOGLE_CLIENT_SECRET="votre-secret"
-REDIRECT_URIS="https://koda.insuco.net/api/v1/auth/google"
+REDIRECT_URIS="https://koda.kodaap.net/api/v1/auth/google"
 
 # ODK Central
-ODK_CENTRAL_URL=https://odk.insuco.net/v1
-ODK_ADMIN_EMAIL=admin@insuco.com
+ODK_CENTRAL_URL=https://odk.kodaap.net/v1
+ODK_ADMIN_EMAIL=admin@kodaap.com
 ODK_ADMIN_PASSWORD=MOT-DE-PASSE-ODK
 ODK_VERIFY_SSL=True
 
 # Enketo
 ENKETO_API_URL=http://enketo:8005/-/api/v2
 ENKETO_API_KEY=votre-clé-enketo-longue
-ENKETO_PUBLIC_BASE_URL=https://koda.insuco.net
+ENKETO_PUBLIC_BASE_URL=https://koda.kodaap.net
 
 # Google Drive (exports)
 GOOGLE_DRIVE_FOLDER_ID=votre-folder-id
@@ -117,16 +117,16 @@ Si vous utilisez un Nginx hôte (en dehors de Docker) pour gérer le SSL :
 ```nginx
 server {
     listen 80;
-    server_name koda.insuco.net;
+    server_name koda.kodaap.net;
     return 301 https://$host$request_uri;
 }
 
 server {
     listen 443 ssl;
-    server_name koda.insuco.net;
+    server_name koda.kodaap.net;
 
-    ssl_certificate /etc/letsencrypt/live/koda.insuco.net/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/koda.insuco.net/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/koda.kodaap.net/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/koda.kodaap.net/privkey.pem;
 
     location / {
         proxy_pass http://127.0.0.1:8080;
@@ -150,7 +150,7 @@ server {
 docker compose -f prod.yml ps
 
 # Santé de l'API
-curl -f https://koda.insuco.net/api/v1/health/ || echo "KO"
+curl -f https://koda.kodaap.net/api/v1/health/ || echo "KO"
 
 # Logs en temps réel
 docker compose -f prod.yml logs -f api celeryworker

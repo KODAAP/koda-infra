@@ -6,7 +6,7 @@ Ce tutoriel vous guide pas à pas pour lancer Koda en environnement de développ
 
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/) ≥ 24
 - [Git](https://git-scm.com/)
-- Accès à une instance ODK Central (ex. `https://test-odk.insuco.net`)
+- Accès à une instance ODK Central (ex. `https://test-odk.kodaap.net`)
 - Compte Google OAuth (optionnel, pour le SSO)
 
 ---
@@ -14,7 +14,7 @@ Ce tutoriel vous guide pas à pas pour lancer Koda en environnement de développ
 ## Étape 1 — Cloner le dépôt
 
 ```bash
-git clone https://github.com/insuco/koda.git
+git clone https://github.com/kodaap/koda.git
 cd koda
 ```
 

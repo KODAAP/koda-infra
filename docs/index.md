@@ -1,6 +1,6 @@
 # Koda — Documentation
 
-**Koda** est une plateforme web de gestion d'enquêtes de terrain développée par [Insuco](https://insuco.net). Elle permet de piloter l'intégralité du cycle de vie des enquêtes ODK : création, déploiement, collecte, supervision et export des données.
+**Koda** est une plateforme web de gestion d'enquêtes de terrain développée par [Kodaap](https://kodaap.net). Elle permet de piloter l'intégralité du cycle de vie des enquêtes ODK : création, déploiement, collecte, supervision et export des données.
 
 ---
 
@@ -59,4 +59,4 @@ graph LR
 - **Collecte** : ODK Central (API v1), Enketo Express 7.6
 - **SIG** : Fiona, GeoPandas, Shapely
 - **Infrastructure** : Docker Compose, Nginx, GitHub Actions
-- **Domaine** : `koda.insuco.net`
+- **Domaine** : `koda.kodaap.net`

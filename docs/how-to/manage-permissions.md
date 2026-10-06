@@ -79,7 +79,7 @@ Koda génère des alertes visuelles et des notifications dans les cas suivants :
 |---|---|---|
 | Projet sans Project Manager actif | Bandeau orange sur le projet | Administrateurs |
 | Projet archivé | Indicateur visuel sur la carte projet | Tous les utilisateurs |
-| Email `@insuco.com` révoqué | Notification email | Administrateurs |
+| Email `@kodaap.com` révoqué | Notification email | Administrateurs |
 | Utilisateur externe supprimé | Notification email | Administrateurs |
 
 ---

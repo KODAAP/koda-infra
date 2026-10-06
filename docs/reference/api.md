@@ -7,7 +7,7 @@ Koda expose une API REST Django REST Framework. La documentation interactive com
 | Environnement | URL |
 |---|---|
 | Développement | `http://localhost:8080/api/schema/swagger-ui/` |
-| Production | `https://koda.insuco.net/api/schema/swagger-ui/` |
+| Production | `https://koda.kodaap.net/api/schema/swagger-ui/` |
 
 ---
 
@@ -26,7 +26,7 @@ POST /api/v1/auth/login/
 Content-Type: application/json
 
 {
-  "email": "user@insuco.com",
+  "email": "user@kodaap.com",
   "password": "mot-de-passe"
 }
 ```
