@@ -21,7 +21,7 @@ services:
       - reverseProxy_nw
 
   postgres:
-    image: postgres:16-bullseye
+    image: postgres:16-bullseye@sha256:32dc7997967900b97fe974553384423d5e01fe6227947ff05630831b3f2e36c8
     container_name: koda_postgres
     restart: unless-stopped
     volumes:
@@ -43,7 +43,7 @@ services:
       - reverseProxy_nw
 
   redis:
-    image: redis:7.0-alpine3.19
+    image: redis:7.0-alpine3.19@sha256:783e5041917e61bac5bb24f5ef9377f2dbfbb6d1df562d76d7dca22ed416b092
     command: redis-server --appendonly yes
     container_name: koda_redis
     restart: unless-stopped

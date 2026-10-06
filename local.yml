@@ -44,7 +44,7 @@ services:
       service: "postgres"
 
   mailpit:
-    image: docker.io/axllent/mailpit:v1.15
+    image: docker.io/axllent/mailpit:v1.15@sha256:c4eacf95c04f8611fcf9c9c44df6f30c5bd4ba1fb507a2d0ca8b8a6a728c48bf
     container_name: koda_mailpit
     ports:
       - "8025:8025"
@@ -102,7 +102,7 @@ services:
 
 
   redis:
-    image: redis:7.0-alpine3.19
+    image: redis:7.0-alpine3.19@sha256:783e5041917e61bac5bb24f5ef9377f2dbfbb6d1df562d76d7dca22ed416b092
     command: redis-server --appendonly yes
     container_name: koda_redis
     volumes:
