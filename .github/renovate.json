@@ -41,15 +41,8 @@
       "enabled": false
     },
     {
-      "description": "Ne pas ouvrir de PR dédiée uniquement au pinning proactif",
+      "description": "Pinner le digest SHA256 de toutes les images Docker de base (PR 'Pin dependencies' initiale + maintien lors des montées de version)",
       "matchDatasources": ["docker"],
-      "matchUpdateTypes": ["pin"],
-      "enabled": false
-    },
-    {
-      "description": "Pinner automatiquement le digest SHA256 uniquement lors des montées de version Docker",
-      "matchDatasources": ["docker"],
-      "matchUpdateTypes": ["major", "minor", "patch"],
       "pinDigests": true
     },
     {
