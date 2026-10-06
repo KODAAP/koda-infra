@@ -1,1 +1,1 @@
-FROM docker.io/postgres:16-bullseye
+FROM docker.io/postgres:16-bullseye@sha256:32dc7997967900b97fe974553384423d5e01fe6227947ff05630831b3f2e36c8

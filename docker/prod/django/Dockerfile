@@ -1,5 +1,5 @@
 # Set the base Python version (slim-bookworm for a lightweight and secure image)
-ARG PYTHON_VERSION=3.12.2-slim-bookworm
+ARG PYTHON_VERSION=3.12.2-slim-bookworm@sha256:5dc6f84b5e97bfb0c90abfb7c55f3cacc2cb6687c8f920b64a833a2219875997
 FROM docker.io/python:${PYTHON_VERSION} AS python
 
 # Stage 1: Build dependency wheels
