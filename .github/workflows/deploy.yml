@@ -16,7 +16,7 @@ permissions:
 jobs:
   build-push-docker:
     name: Build & Push Docker Images
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     permissions:
       contents: read
       packages: write
@@ -89,7 +89,7 @@ jobs:
   dockle-scan:
     name: Dockle Scan (${{ matrix.name }})
     needs: build-push-docker
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     permissions:
       contents: read
       packages: read
