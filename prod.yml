@@ -43,7 +43,7 @@ services:
       - reverseProxy_nw
 
   redis:
-    image: redis:7.0-alpine3.19@sha256:783e5041917e61bac5bb24f5ef9377f2dbfbb6d1df562d76d7dca22ed416b092
+    image: redis:7.2-alpine3.19@sha256:8f157725f8eee31e65a8d4765f1f986d76aedc1a0503345dfb63a2b1b5a441ee
     command: redis-server --appendonly yes
     container_name: koda_redis
     restart: unless-stopped
