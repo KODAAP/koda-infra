@@ -1,4 +1,4 @@
-FROM docker.io/python:3.12.2-slim-bookworm@sha256:5dc6f84b5e97bfb0c90abfb7c55f3cacc2cb6687c8f920b64a833a2219875997 AS python
+FROM docker.io/python:3.15.2-slim-bookworm@sha256:498829c717b1e59fc42f0e7865eafe4e04ca0f70a3769d4ae70ba218df54507c AS python
 
 # Stage 1: Build dependency wheels
 FROM python AS python-build-stage
